@@ -1,0 +1,1324 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ドンヨミ｜二郎系コール研究所（非公式）</title>
+<meta name="description" content="二郎系ラーメンの非公式ガイド。4つの質問で言うべきコールが決まる「一発コール診断」と、全国の直系・インスパイア店の味の傾向、コールから味を予測する機能。">
+<meta name="theme-color" content="#F6F0E4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14100C" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ドンヨミ">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:title" content="ドンヨミ｜二郎系コール研究所（非公式）">
+<meta property="og:description" content="二郎系ラーメンの非公式ガイド。4つの質問で言うべきコールが決まる「一発コール診断」と、全国の直系・インスパイア店の味の傾向、コールから味を予測する機能。">
+<meta property="og:image" content="https://donyomi2026-jpg.github.io/donyomi/og.png">
+<meta property="og:url" content="https://donyomi2026-jpg.github.io/donyomi/">
+<link rel="canonical" href="https://donyomi2026-jpg.github.io/donyomi/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ドンヨミ 食べる前に、丼を読む。4問で一発コール">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@donyomi2026">
+<meta name="twitter:title" content="ドンヨミ｜二郎系コール研究所（非公式）">
+<meta name="twitter:description" content="二郎系ラーメンの非公式ガイド。4つの質問で言うべきコールが決まる「一発コール診断」と、全国の直系・インスパイア店の味の傾向、コールから味を予測する機能。">
+<meta name="twitter:image" content="https://donyomi2026-jpg.github.io/donyomi/og.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="48x48" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-title" content="ドンヨミ">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap">
+<style>
+/* Layout: 食券紙の地に、上部固定のタブ。1カラム（最大1120px）で、店一覧だけ2〜3列のグリッド */
+/* ==========================================================================
+   ドンヨミ Design Tokens  v1.0
+   二郎系ラーメン専門サイト / PWA
+   - ライト: 生成りの食券紙 × 醤油 × 食券機の赤ボタン
+   - ダーク: 夜の行列、湯気の立つカウンター
+   使い方: <html> に data-theme="light" | "dark" を付けると手動切替。
+           未指定なら OS 設定 (prefers-color-scheme) に従う。
+   ========================================================================== */
+
+:root {
+  color-scheme: light;
+
+  /* ---------- Surface / Ink ---------- */
+  --bg:            #F6F0E4;  /* 生成りの食券紙 */
+  --bg-sunken:     #EDE4D3;
+  --surface:       #FFFCF6;  /* カード */
+  --surface-2:     #F1E9DA;  /* 入れ子・入力欄 */
+  --surface-raised:#FFFFFF;
+  --ink:           #1E1813;  /* 本文 (on --bg 15.5:1) */
+  --ink-muted:     #5A4E42;  /* 補足 (on --bg 7.1:1) */
+  --ink-subtle:    #6C5F51;  /* 注記・プレースホルダ (on --bg 5.4:1) */
+  --ink-inverse:   #FFF8EE;
+  --line:          #DCCFBA;  /* 区切り線 */
+  --line-strong:   #958670;  /* 入力枠・チップ枠 (on --bg 3.1:1, UI 要件) */
+
+  /* ---------- Brand ---------- */
+  --primary:        #7A3414;  /* 醤油 / カラメ。主要ボタン (8.5:1) */
+  --primary-hover:  #652A0F;
+  --primary-soft:   #F3E1D3;
+  --on-primary:     #FFF8EE;
+  --accent:         #B8281A;  /* 食券機の赤ボタン。CTA・強調 (white 6.3:1) */
+  --accent-hover:   #9C1F13;
+  --accent-soft:    #F8DDD6;
+  --on-accent:      #FFFFFF;
+  --focus-ring:     #1A63C0;  /* フォーカスは色相を変えて確実に視認 */
+
+  /* ---------- Ingredient palette (イラスト・アイコン用) ---------- */
+  --c-yasai:        #6E9A34;  /* キャベツ */
+  --c-yasai-dark:   #3F6A1C;
+  --c-moyashi:      #F4EFD9;  /* もやし */
+  --c-moyashi-line: #CBBF96;
+  --c-ninniku:      #EFE6CC;  /* 刻みニンニク */
+  --c-ninniku-dark: #B9A774;
+  --c-abura:        #F6E7B8;  /* 背脂 */
+  --c-abura-shine:  #FFFBEA;
+  --c-karame:       #5A240C;  /* カラメ醤油 */
+  --c-broth:        #B9773A;  /* 乳化スープ */
+  --c-broth-light:  #D9A061;
+  --c-pork:         #A9573A;  /* 豚 (赤身) */
+  --c-pork-fat:     #F1D3BC;  /* 豚 (脂身) */
+  --c-noodle:       #E2C27A;  /* 極太麺 */
+  --c-bowl:         #2B2420;  /* 丼 */
+  --c-bowl-rim:     #F2EBDD;
+  --c-bowl-band:    #B8281A;  /* 丼の帯 (単色) */
+  --c-steam:        rgba(255, 255, 255, 0.85);
+  --c-steam-line:   rgba(90, 78, 66, 0.35);
+  --c-outline:      #1E1813;  /* イラスト輪郭線 */
+
+  /* ---------- Topping text colors (文字で使う時はこちら: AA 4.5:1 以上) ---------- */
+  --t-yasai:   #3F6A1C;  /* 6.2:1 on --surface */
+  --t-ninniku: #77662F;  /* 5.5:1 */
+  --t-abura:   #8A6410;  /* 5.2:1 */
+  --t-karame:  #5A240C;  /* 12:1 */
+
+  /* ---------- Call level (なし→マシマシ, 量の順序尺度) ---------- */
+  --lv-0: #E6DDCD;  /* なし     */
+  --lv-1: #E9C9A5;  /* 少なめ   */
+  --lv-2: #D9965C;  /* 普通     */
+  --lv-3: #B9531F;  /* マシ     */
+  --lv-4: #7A2410;  /* マシマシ */
+  --on-lv-0: #1E1813; --on-lv-1: #1E1813; --on-lv-2: #1E1813;
+  --on-lv-3: #FFFFFF; --on-lv-4: #FFFFFF;
+
+  /* ---------- Taste axes (レーダー/バー。5軸を区別) ---------- */
+  --taste-salty:  #B8281A;  /* しょっぱさ */
+  --taste-rich:   #B9773A;  /* こってり/乳化 */
+  --taste-noodle: #9A7A1E;  /* 麺の存在感 */
+  --taste-pork:   #A9573A;  /* 豚 */
+  --taste-volume: #3F6A1C;  /* 量 */
+  --chart-fill:   rgba(184, 40, 26, 0.18);
+  --chart-stroke: #B8281A;
+  --chart-grid:   #DCCFBA;
+  --chart-axis:   #6C5F51;
+
+  /* ---------- Status ---------- */
+  --success: #2F6B2A; --success-soft: #DDEBD3;
+  --warning: #8A5A00; --warning-soft: #F7E7C2;
+  --danger:  #B3261E; --danger-soft:  #F7DAD6;
+  --info:    #1F5FA8; --info-soft:    #DCE7F5;
+
+  /* ---------- Pattern ---------- */
+  --pattern-ink:     rgba(122, 52, 20, 0.07);
+  --pattern-opacity: 1;
+
+  /* ---------- Typography ---------- */
+  --font-display: "Dela Gothic One", "Hiragino Kaku Gothic StdN", "Yu Gothic", sans-serif;
+  --font-body:    "Zen Kaku Gothic New", "Hiragino Kaku Gothic ProN", "Yu Gothic UI", "Meiryo", system-ui, sans-serif;
+  --font-num:     "Zen Kaku Gothic New", system-ui, sans-serif; /* + font-variant-numeric: tabular-nums */
+
+  --fs-xs:   0.75rem;   /* 12 注記 */
+  --fs-sm:   0.875rem;  /* 14 補足・チップ */
+  --fs-md:   1rem;      /* 16 本文 (スマホ最小) */
+  --fs-lg:   1.125rem;  /* 18 リード */
+  --fs-xl:   1.375rem;  /* 22 h3 */
+  --fs-2xl:  1.75rem;   /* 28 h2 */
+  --fs-3xl:  clamp(2rem, 7vw, 3rem);    /* h1 */
+  --fs-hero: clamp(2.5rem, 11vw, 4.5rem);
+
+  --fw-regular: 400; --fw-medium: 500; --fw-bold: 700; --fw-black: 900;
+  --lh-tight: 1.25; --lh-snug: 1.45; --lh-body: 1.75;
+  --ls-display: 0.02em; --ls-label: 0.06em;
+
+  /* ---------- Spacing (4px base) ---------- */
+  --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px; --sp-4: 16px;
+  --sp-5: 20px; --sp-6: 24px; --sp-8: 32px; --sp-10: 40px;
+  --sp-12: 48px; --sp-16: 64px;
+  --gutter: 16px;            /* スマホ左右余白 */
+  --content-max: 720px;      /* 本文最大幅 */
+  --layout-max: 1120px;
+  --tap-min: 44px;           /* タップ領域の最小 */
+
+  /* ---------- Radius ---------- */
+  --r-xs: 4px;    /* タグ・バッジ */
+  --r-sm: 8px;    /* 入力・小ボタン */
+  --r-md: 12px;   /* ボタン・チップ群 */
+  --r-lg: 16px;   /* カード */
+  --r-xl: 24px;   /* シート・モーダル */
+  --r-pill: 999px;
+  --r-ticket: 6px;/* 食券型カード (角は小さく、切り欠きで表現) */
+
+  /* ---------- Shadow (暖色寄りの影) ---------- */
+  --shadow-1: 0 1px 2px rgba(60, 35, 15, 0.08), 0 1px 1px rgba(60, 35, 15, 0.04);
+  --shadow-2: 0 2px 6px rgba(60, 35, 15, 0.10), 0 8px 20px rgba(60, 35, 15, 0.06);
+  --shadow-3: 0 6px 16px rgba(60, 35, 15, 0.14), 0 18px 40px rgba(60, 35, 15, 0.10);
+  --shadow-press: inset 0 2px 0 rgba(0, 0, 0, 0.18); /* 食券ボタン押下 */
+  --shadow-button: 0 3px 0 var(--primary-hover);     /* 食券機ボタンの厚み */
+  --shadow-button-accent: 0 3px 0 var(--accent-hover);
+
+  /* ---------- Border ---------- */
+  --bw: 1px; --bw-strong: 2px;
+
+  /* ---------- Motion ---------- */
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-fast: 120ms; --dur-base: 200ms; --dur-slow: 360ms;
+
+  /* ---------- Z-index ---------- */
+  --z-header: 50; --z-sheet: 80; --z-toast: 100;
+}
+
+/* ---------- Dark (OS 設定に追従。ただし data-theme="light" 明示時は除外) ---------- */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg:            #14100C;
+    --bg-sunken:     #0E0B08;
+    --surface:       #1E1914;
+    --surface-2:     #29221B;
+    --surface-raised:#2F2720;
+    --ink:           #F4ECDF;
+    --ink-muted:     #C4B6A3;
+    --ink-subtle:    #9C8D7A;
+    --ink-inverse:   #1E1813;
+    --line:          #3A3027;
+    --line-strong:   #806E5B;
+
+    --primary:        #E8945A;
+    --primary-hover:  #F2A975;
+    --primary-soft:   #3A2416;
+    --on-primary:     #1C0F06;
+    --accent:         #FF6A52;
+    --accent-hover:   #FF8672;
+    --accent-soft:    #3D1A14;
+    --on-accent:      #1C0705;
+    --focus-ring:     #7DB4FF;
+
+    --c-yasai:        #8DBB4E;
+    --c-yasai-dark:   #4E7D25;
+    --c-moyashi:      #EDE6CC;
+    --c-moyashi-line: #A99D74;
+    --c-ninniku:      #E6DBBC;
+    --c-ninniku-dark: #A8955F;
+    --c-abura:        #F1DFA6;
+    --c-abura-shine:  #FFF8DE;
+    --c-karame:       #3E1806;
+    --c-broth:        #A7672D;
+    --c-broth-light:  #C98B4A;
+    --c-pork:         #9C4D31;
+    --c-pork-fat:     #E8C6AC;
+    --c-noodle:       #D6B46A;
+    --c-bowl:         #3B312A;
+    --c-bowl-rim:     #E8DFCE;
+    --c-bowl-band:    #D2412E;
+    --c-steam:        rgba(255, 248, 238, 0.55);
+    --c-steam-line:   rgba(244, 236, 223, 0.35);
+    --c-outline:      #0B0907;
+
+    --t-yasai:   #A9D46B;
+    --t-ninniku: #E2D3A2;
+    --t-abura:   #F0CF72;
+    --t-karame:  #E8945A;
+
+    --lv-0: #3A3027;
+    --lv-1: #6B4A30;
+    --lv-2: #9A5C32;
+    --lv-3: #E07B3F;
+    --lv-4: #FFB27A;
+    --on-lv-0: #F4ECDF; --on-lv-1: #F4ECDF; --on-lv-2: #FFFFFF;
+    --on-lv-3: #1C0F06; --on-lv-4: #1C0F06;
+
+    --taste-salty:  #FF6A52;
+    --taste-rich:   #E8945A;
+    --taste-noodle: #E2C27A;
+    --taste-pork:   #E3866A;
+    --taste-volume: #A9D46B;
+    --chart-fill:   rgba(255, 106, 82, 0.22);
+    --chart-stroke: #FF6A52;
+    --chart-grid:   #3A3027;
+    --chart-axis:   #9C8D7A;
+
+    --success: #8FD18A; --success-soft: #1F3320;
+    --warning: #F2C063; --warning-soft: #3A2D12;
+    --danger:  #FF8A80; --danger-soft:  #3D1A17;
+    --info:    #8AB8F5; --info-soft:    #172A42;
+
+    --pattern-ink: rgba(244, 236, 223, 0.045);
+
+    --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.5);
+    --shadow-2: 0 2px 6px rgba(0, 0, 0, 0.45), 0 8px 20px rgba(0, 0, 0, 0.35);
+    --shadow-3: 0 6px 16px rgba(0, 0, 0, 0.55), 0 18px 40px rgba(0, 0, 0, 0.45);
+    --shadow-press: inset 0 2px 0 rgba(0, 0, 0, 0.35);
+    --shadow-button: 0 3px 0 #9A5A2E;
+    --shadow-button-accent: 0 3px 0 #A8382A;
+  }
+}
+
+/* ---------- Dark (手動指定) : 上と同一値 ---------- */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg:            #14100C;
+  --bg-sunken:     #0E0B08;
+  --surface:       #1E1914;
+  --surface-2:     #29221B;
+  --surface-raised:#2F2720;
+  --ink:           #F4ECDF;
+  --ink-muted:     #C4B6A3;
+  --ink-subtle:    #9C8D7A;
+  --ink-inverse:   #1E1813;
+  --line:          #3A3027;
+  --line-strong:   #806E5B;
+
+  --primary:        #E8945A;
+  --primary-hover:  #F2A975;
+  --primary-soft:   #3A2416;
+  --on-primary:     #1C0F06;
+  --accent:         #FF6A52;
+  --accent-hover:   #FF8672;
+  --accent-soft:    #3D1A14;
+  --on-accent:      #1C0705;
+  --focus-ring:     #7DB4FF;
+
+  --c-yasai:        #8DBB4E;
+  --c-yasai-dark:   #4E7D25;
+  --c-moyashi:      #EDE6CC;
+  --c-moyashi-line: #A99D74;
+  --c-ninniku:      #E6DBBC;
+  --c-ninniku-dark: #A8955F;
+  --c-abura:        #F1DFA6;
+  --c-abura-shine:  #FFF8DE;
+  --c-karame:       #3E1806;
+  --c-broth:        #A7672D;
+  --c-broth-light:  #C98B4A;
+  --c-pork:         #9C4D31;
+  --c-pork-fat:     #E8C6AC;
+  --c-noodle:       #D6B46A;
+  --c-bowl:         #3B312A;
+  --c-bowl-rim:     #E8DFCE;
+  --c-bowl-band:    #D2412E;
+  --c-steam:        rgba(255, 248, 238, 0.55);
+  --c-steam-line:   rgba(244, 236, 223, 0.35);
+  --c-outline:      #0B0907;
+
+  --t-yasai:   #A9D46B;
+  --t-ninniku: #E2D3A2;
+  --t-abura:   #F0CF72;
+  --t-karame:  #E8945A;
+
+  --lv-0: #3A3027;
+  --lv-1: #6B4A30;
+  --lv-2: #9A5C32;
+  --lv-3: #E07B3F;
+  --lv-4: #FFB27A;
+  --on-lv-0: #F4ECDF; --on-lv-1: #F4ECDF; --on-lv-2: #FFFFFF;
+  --on-lv-3: #1C0F06; --on-lv-4: #1C0F06;
+
+  --taste-salty:  #FF6A52;
+  --taste-rich:   #E8945A;
+  --taste-noodle: #E2C27A;
+  --taste-pork:   #E3866A;
+  --taste-volume: #A9D46B;
+  --chart-fill:   rgba(255, 106, 82, 0.22);
+  --chart-stroke: #FF6A52;
+  --chart-grid:   #3A3027;
+  --chart-axis:   #9C8D7A;
+
+  --success: #8FD18A; --success-soft: #1F3320;
+  --warning: #F2C063; --warning-soft: #3A2D12;
+  --danger:  #FF8A80; --danger-soft:  #3D1A17;
+  --info:    #8AB8F5; --info-soft:    #172A42;
+
+  --pattern-ink: rgba(244, 236, 223, 0.045);
+
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-2: 0 2px 6px rgba(0, 0, 0, 0.45), 0 8px 20px rgba(0, 0, 0, 0.35);
+  --shadow-3: 0 6px 16px rgba(0, 0, 0, 0.55), 0 18px 40px rgba(0, 0, 0, 0.45);
+  --shadow-press: inset 0 2px 0 rgba(0, 0, 0, 0.35);
+  --shadow-button: 0 3px 0 #9A5A2E;
+  --shadow-button-accent: 0 3px 0 #A8382A;
+}
+
+/* ---------- Base ---------- */
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background-color: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--fs-md);
+  line-height: var(--lh-body);
+  font-feature-settings: "palt" 0;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, .display {
+  font-family: var(--font-display);
+  font-weight: 400;              /* Dela Gothic One は単一ウェイト */
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-display);
+  font-feature-settings: "palt" 1;
+}
+h3, h4 { font-family: var(--font-body); font-weight: var(--fw-black); line-height: var(--lh-snug); }
+.num { font-family: var(--font-num); font-variant-numeric: tabular-nums; font-weight: var(--fw-bold); }
+:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 2px; }
+
+/* 背景パターン (pattern.svg をインライン化して url() に入れるか、CSS mask で着色) */
+.bg-pattern {
+  position: relative;
+  isolation: isolate;
+}
+.bg-pattern::before {
+  content: "";
+  position: absolute; inset: 0; z-index: -1;
+  background-color: var(--pattern-ink);
+  -webkit-mask: url("pattern.svg") repeat 0 0 / 160px 160px;
+          mask: url("pattern.svg") repeat 0 0 / 160px 160px;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}
+
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:var(--fs-md);line-height:var(--lh-body);-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--surface)}
+a{color:var(--primary)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--focus-ring);outline-offset:2px}
+.wrap{max-width:var(--layout-max);margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* header */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:var(--z-header);background:var(--surface);border-bottom:var(--bw) solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:var(--sp-3);padding-block:8px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;text-decoration:none;flex:none}
+.logo svg{height:36px;width:auto;display:block}
+.tabs{display:flex;gap:4px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs a{display:inline-flex;align-items:center;min-height:40px;padding:0 12px;border-radius:var(--r-sm);text-decoration:none;color:var(--ink-muted);font-weight:var(--fw-bold);font-size:var(--fs-sm);white-space:nowrap}
+.tabs a[aria-current="page"]{background:var(--primary);color:var(--on-primary)}
+@media (max-width:560px){.top .wrap{gap:4px}.tabs{margin-left:0;width:100%}.tabs a{flex:1;justify-content:center;padding:0 6px}}
+
+main{padding-block:var(--sp-6) var(--sp-16)}
+section+section{margin-top:var(--sp-10)}
+h1,h2{font-family:var(--font-display);font-weight:400;line-height:var(--lh-tight);letter-spacing:var(--ls-display);text-wrap:balance;margin:0}
+h1{font-size:var(--fs-3xl)}
+h2{font-size:var(--fs-xl)}
+h3{font-size:var(--fs-lg);margin:0;font-weight:var(--fw-black)}
+p{margin:0}
+.lead{color:var(--ink-muted);font-size:var(--fs-lg);max-width:60ch}
+.muted{color:var(--ink-muted)}
+.small{font-size:var(--fs-sm)}
+.xs{font-size:var(--fs-xs);color:var(--ink-subtle)}
+.stack{display:flex;flex-direction:column;gap:var(--sp-4)}
+.stack-s{display:flex;flex-direction:column;gap:var(--sp-2)}
+.row{display:flex;gap:var(--sp-3);flex-wrap:wrap;align-items:center}
+.label{font-size:var(--fs-xs);font-weight:var(--fw-bold);letter-spacing:var(--ls-label);color:var(--ink-subtle)}
+.num{font-variant-numeric:tabular-nums}
+
+/* 食券型カード：左右に切り欠き */
+.ticket{position:relative;background:var(--surface);border-radius:var(--r-ticket);padding:var(--sp-5);box-shadow:var(--shadow-1);
+  -webkit-mask:radial-gradient(circle 9px at 0 50%,#0000 98%,#000) left/51% 100% no-repeat,radial-gradient(circle 9px at 100% 50%,#0000 98%,#000) right/51% 100% no-repeat;
+          mask:radial-gradient(circle 9px at 0 50%,#0000 98%,#000) left/51% 100% no-repeat,radial-gradient(circle 9px at 100% 50%,#0000 98%,#000) right/51% 100% no-repeat}
+.panel{background:var(--surface);border:var(--bw) solid var(--line);border-radius:var(--r-lg);padding:var(--sp-5)}
+.perf{border:0;border-top:2px dashed var(--line);margin:var(--sp-4) 0}
+
+/* hero */
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:var(--sp-6);align-items:center}
+.hero-art svg{width:100%;max-width:420px;height:auto;display:block;margin:0 auto}
+.hero h1{font-size:var(--fs-hero)}
+.hero h1 em{font-style:normal;color:var(--accent)}
+@media (max-width:760px){.hero{grid-template-columns:1fr}.hero-art{order:-1}.hero-art svg{max-width:260px}}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:var(--tap-min);padding:0 18px;border-radius:var(--r-md);border:0;font-weight:var(--fw-black);cursor:pointer;text-decoration:none;transition:transform var(--dur-fast) var(--ease-out)}
+.btn-primary{background:var(--primary);color:var(--on-primary);box-shadow:var(--shadow-button)}
+.btn-accent{background:var(--accent);color:var(--on-accent);box-shadow:var(--shadow-button-accent)}
+.btn-ghost{background:var(--surface-2);color:var(--ink);border:var(--bw) solid var(--line-strong)}
+.btn:active{transform:translateY(2px);box-shadow:none}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+
+/* chips */
+.chip{display:inline-flex;align-items:center;gap:4px;padding:2px 10px;border-radius:var(--r-pill);font-size:var(--fs-xs);font-weight:var(--fw-bold);background:var(--surface-2);color:var(--ink-muted);border:var(--bw) solid var(--line);white-space:nowrap}
+.chip-direct{background:var(--accent-soft);color:var(--accent);border-color:transparent}
+.chip-inspire{background:var(--primary-soft);color:var(--primary);border-color:transparent}
+.chip-closed{background:var(--danger-soft);color:var(--danger);border-color:transparent}
+.chip-high{background:var(--success-soft);color:var(--success);border-color:transparent}
+.chip-mid{background:var(--warning-soft);color:var(--warning);border-color:transparent}
+.chip-low{background:var(--surface-2);color:var(--ink-subtle)}
+
+/* 5段階の食券ボタン */
+.lvl{display:grid;grid-template-columns:96px 1fr;gap:10px;align-items:center}
+.lvl-name{display:flex;align-items:center;gap:6px;font-weight:var(--fw-black);white-space:nowrap}
+.lvl-name svg{width:24px;height:24px;flex:none}
+.seg{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
+.seg button{min-height:42px;border-radius:var(--r-sm);border:var(--bw) solid var(--line-strong);background:var(--surface);font-size:var(--fs-xs);font-weight:var(--fw-bold);cursor:pointer;padding:0 2px;line-height:1.2}
+.seg button[aria-pressed="true"]{border-color:transparent;box-shadow:var(--shadow-press)}
+.seg button[data-l="0"][aria-pressed="true"]{background:var(--lv-0);color:var(--on-lv-0)}
+.seg button[data-l="1"][aria-pressed="true"]{background:var(--lv-1);color:var(--on-lv-1)}
+.seg button[data-l="2"][aria-pressed="true"]{background:var(--lv-2);color:var(--on-lv-2)}
+.seg button[data-l="3"][aria-pressed="true"]{background:var(--lv-3);color:var(--on-lv-3)}
+.seg button[data-l="4"][aria-pressed="true"]{background:var(--lv-4);color:var(--on-lv-4)}
+.seg.rate button[aria-pressed="true"]{background:var(--primary);color:var(--on-primary)}
+.t-yasai{color:var(--t-yasai)}.t-ninniku{color:var(--t-ninniku)}.t-abura{color:var(--t-abura)}.t-karame{color:var(--t-karame)}
+
+/* 選択肢（一発コールの質問） */
+.choices{display:flex;flex-wrap:wrap;gap:6px}
+.choices button{min-height:42px;padding:0 14px;border-radius:var(--r-pill);border:var(--bw) solid var(--line-strong);background:var(--surface);font-weight:var(--fw-bold);cursor:pointer}
+.choices button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.q{display:flex;flex-direction:column;gap:6px}
+
+/* コール文 */
+.callout{background:var(--ink);color:var(--bg);border-radius:var(--r-md);padding:var(--sp-4) var(--sp-5);display:flex;flex-direction:column;gap:6px}
+.callout .say{font-family:var(--font-display);font-size:clamp(1.4rem,6vw,2.1rem);line-height:1.3;word-break:keep-all;overflow-wrap:anywhere}
+.callout .xs{color:inherit;opacity:.75}
+
+/* 味バー */
+.bars{display:flex;flex-direction:column;gap:8px}
+.bar{display:grid;grid-template-columns:7em 1fr 3.2em;gap:10px;align-items:center;font-size:var(--fs-sm)}
+.bar .track{height:12px;border-radius:var(--r-pill);background:var(--surface-2);position:relative;overflow:hidden;border:var(--bw) solid var(--line)}
+.bar .fill{position:absolute;inset:0 auto 0 0;border-radius:var(--r-pill)}
+.bar .base{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink);opacity:.55}
+.bar .v{text-align:right;font-variant-numeric:tabular-nums;font-weight:var(--fw-bold)}
+.bar.na .v{color:var(--ink-subtle);font-weight:400}
+
+/* 店一覧 */
+.filters{display:grid;grid-template-columns:2fr 1fr 1fr;gap:var(--sp-2)}
+.filters input,.filters select,.field select,.field input,.field textarea{min-height:var(--tap-min);border-radius:var(--r-sm);border:var(--bw) solid var(--line-strong);background:var(--surface);padding:0 12px;width:100%;min-width:0}
+.field textarea{padding:10px 12px;min-height:80px;resize:vertical}
+@media (max-width:600px){.filters{grid-template-columns:1fr 1fr}.filters .search{grid-column:1/-1}}
+.toggle{display:inline-flex;align-items:center;gap:8px;font-size:var(--fs-sm);font-weight:var(--fw-bold);cursor:pointer}
+.toggle input{width:20px;height:20px;accent-color:var(--primary)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:var(--sp-3)}
+@media (max-width:420px){.lvl{grid-template-columns:84px 1fr}.seg button{font-size:11px}}
+@media (max-width:360px){.grid{grid-template-columns:1fr}}
+.shop{display:flex;flex-direction:column;gap:10px;text-decoration:none;color:inherit;padding:var(--sp-4) var(--sp-5)}
+.shop:hover{box-shadow:var(--shadow-2)}
+.shop h3{font-size:var(--fs-md)}
+.mini{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.mini div{display:flex;flex-direction:column;gap:3px}
+.dots{display:flex;gap:3px}
+.dots i{width:100%;height:6px;border-radius:2px;background:var(--surface-2);border:var(--bw) solid var(--line)}
+.dots i.on{background:var(--lv-3);border-color:transparent}
+
+/* 店詳細 */
+.detail{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-4);align-items:start}
+.detail>*{min-width:0}
+@media (max-width:820px){.detail{grid-template-columns:1fr}}
+dl.info{display:grid;grid-template-columns:6em 1fr;gap:6px 12px;margin:0;font-size:var(--fs-sm)}
+dl.info dt{color:var(--ink-subtle);font-weight:var(--fw-bold)}
+dl.info dd{margin:0;min-width:0;overflow-wrap:anywhere}
+.flow{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;counter-reset:f}
+.flow li{display:grid;grid-template-columns:28px 1fr;gap:10px;font-size:var(--fs-sm)}
+.flow li::before{counter-increment:f;content:counter(f);width:28px;height:28px;border-radius:50%;background:var(--primary);color:var(--on-primary);display:grid;place-items:center;font-weight:var(--fw-black);font-size:var(--fs-xs)}
+.note{background:var(--warning-soft);color:var(--warning);border-radius:var(--r-sm);padding:10px 12px;font-size:var(--fs-sm)}
+details summary{cursor:pointer;font-weight:var(--fw-bold);font-size:var(--fs-sm)}
+.srcs{margin:8px 0 0;padding-left:1.2em;font-size:var(--fs-xs);overflow-wrap:anywhere}
+
+/* 統計 */
+.heat{overflow-x:auto}
+.heat table{border-collapse:separate;border-spacing:4px;min-width:460px;width:100%}
+.heat th{font-size:var(--fs-xs);font-weight:var(--fw-bold);color:var(--ink-subtle);text-align:center}
+.heat th[scope="row"]{text-align:left}
+.heat td{height:52px;border-radius:var(--r-sm);text-align:center;font-variant-numeric:tabular-nums;font-weight:var(--fw-black);font-size:var(--fs-sm)}
+.legend{display:flex;align-items:center;gap:8px;font-size:var(--fs-xs);color:var(--ink-subtle)}
+.legend span.g{flex:1;max-width:220px;height:10px;border-radius:var(--r-pill);background:linear-gradient(90deg,var(--info),var(--surface-2),var(--accent))}
+table.rank{width:100%;border-collapse:collapse;font-size:var(--fs-sm)}
+table.rank th{white-space:nowrap}
+table.rank th,table.rank td{padding:8px 6px;border-bottom:var(--bw) solid var(--line);text-align:left}
+table.rank td.n{text-align:right;font-variant-numeric:tabular-nums}
+.tbl{overflow-x:auto}
+
+.empty{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;padding:var(--sp-6) var(--sp-4)}
+.empty svg{width:140px;height:auto}
+.banner{display:flex;gap:10px;align-items:flex-start;background:var(--info-soft,var(--surface-2));color:var(--ink);border-radius:var(--r-sm);padding:10px 12px;font-size:var(--fs-sm)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-4);align-items:start}
+.two>*{min-width:0}
+@media (max-width:820px){.two{grid-template-columns:1fr}}
+.road{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:var(--sp-3)}
+.road .panel{display:flex;flex-direction:column;gap:6px}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:var(--r-pill);font-weight:var(--fw-bold);z-index:var(--z-toast);font-size:var(--fs-sm)}
+footer{border-top:var(--bw) solid var(--line);padding-block:var(--sp-6);color:var(--ink-subtle);font-size:var(--fs-xs)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.note-sample{background:var(--accent-soft);color:var(--ink);border:var(--bw) solid var(--accent);border-left-width:6px;font-size:var(--fs-md)}
+.note-sample strong{color:var(--accent)}
+.save-box{border-top:var(--bw) dashed var(--line-strong);padding-top:var(--sp-3)}
+footer a{color:inherit}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="#home" aria-label="ドンヨミ ホーム"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 96" role="img" aria-label="ドンヨミ">
+  
+  
+  <g transform="translate(4 8)">
+    <path d="M8 0 H72 a8 8 0 0 1 8 8 V30 a10 10 0 0 0 0 20 V72 a8 8 0 0 1 -8 8 H8 a8 8 0 0 1 -8 -8 V50 a10 10 0 0 0 0 -20 V8 a8 8 0 0 1 8 -8 Z" fill="var(--logo-mark, #B8281A)"/>
+    
+    <path d="M32 20 c-4 -4 4 -7 0 -12 M48 20 c-4 -4 4 -7 0 -12" fill="none" stroke="var(--logo-mark-ink, #FFF8EE)" stroke-width="3.5" stroke-linecap="round"/>
+    
+    <path d="M22 50 C24 38 32 26 40 25 C48 26 56 38 58 50 Z" fill="var(--logo-mark-ink, #FFF8EE)" opacity=".9"/>
+    
+    <path d="M14 48 H66 C65 60 54 68 40 68 C26 68 15 60 14 48 Z" fill="var(--logo-mark-ink, #FFF8EE)"/>
+  </g>
+  
+  <text x="100" y="62" font-family="'Dela Gothic One', sans-serif" font-size="46" letter-spacing="1" fill="var(--logo-ink, var(--ink, #1E1813))">ドンヨミ</text>
+  <text x="102" y="86" font-family="'Zen Kaku Gothic New', sans-serif" font-weight="700" font-size="12" letter-spacing="3" fill="var(--logo-sub, var(--ink-muted, #5A4E42))">DONYOMI · CALL &amp; TASTE</text>
+</svg></a>
+    <nav class="tabs" aria-label="メイン">
+      <a href="#home" data-v="home">一発コール</a>
+      <a href="#shops" data-v="shops">店を探す</a>
+      <a href="#post" data-v="post">記録する</a>
+      <a href="#stats" data-v="stats">コール統計</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap" id="app"></main>
+
+<footer>
+  <div class="wrap stack-s">
+    <p><strong>ドンヨミはラーメン二郎および各店舗とは関係のない非公式サイトです。</strong></p>
+    <p>更新情報：<a href="https://x.com/donyomi2026" target="_blank" rel="noopener">X（@donyomi2026）</a>　／　記録の投稿：<a href="https://claude.ai/artifact/U9YCBJVvpktteS8JE8rvTq" target="_blank" rel="noopener">Claude版（要ログイン）</a></p>
+    <p>営業時間・定休日はまとめサイト等から集めた情報です。変わることが多いので、来店前に各店の公式Xを確認してください。</p>
+    <p>味の傾向は複数の口コミ・ブログの評判を要約して数値化したもので、店や日によって変わります。店舗情報の更新：<span id="upd">2026-11-11</span></p>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script id="shopdata" type="application/json">{"updated":"2026-11-11","shops":[{"id":"jiro-mita","name":"ラーメン二郎 三田本店","category":"直系","chain":"ラーメン二郎","prefecture":"東京都","city":"港区","address":"東京都港区三田2-16-4","station":"三田（都営）／田町（JR）","lat":null,"lng":null,"hours":"月〜金 8:00〜20:00／土 8:00〜19:00（目安）","closed":"日・祝","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。小ラーメン／大ラーメン、豚入り（豚増し）が基本構成。小でも一般的なラーメンより量が多い。店舗別の麺量(g)は未確認","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":[],"notes":"総本山。1968年創業、1996年に現在地へ移転。開店時刻は情報源により8:00/8:30と差異あり","sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎","https://iekei.shop/jiro-ramen-shop-list","https://skdesu.com/ja/maps/jiro/"],"taste":{"noodle_thickness":4,"noodle_firmness":2,"soup_richness":4,"emulsification":1,"pork_size":4,"pork_tenderness":3,"volume":3,"garlic_strength":null,"vegetable_ratio":3},"confidence":"mid","summary":"総本山。強力粉の太麺はやや柔らかめでモチモチ、スープは非乳化寄りで醤油ダレの存在感が強いという評価が多い。豚は厚切りで脂身が多く味が染みている一方、日による味のブレや、昔より盛りが控えめになったという声もある。","popular_calls":[{"call":"ニンニク・カラメ","note":"醤油の強さを活かすコールとして報告例あり"},{"call":"ヤサイ・アブラ・ニンニクそのまま（標準）","note":"標準でももやし＋キャベツがしっかり盛られる"}],"beginner_tip":"行列が長く回転重視の店なので、食券（小）とコール内容を並んでいる間に決めておくとスムーズ。","review_sources":["https://gigazine.net/news/20131011-ramen-jiro-head-office/","https://ranking.net/rankings/best-jiro-stores","https://www.appbank.net/2023/08/30/ramen/2546927.php","https://tabelog.com/matome/4231/"]},{"id":"jiro-meguro","name":"ラーメン二郎 目黒店","category":"直系","chain":"ラーメン二郎","prefecture":"東京都","city":"目黒区","address":"東京都目黒区目黒3-7-2","station":"目黒","lat":null,"lng":null,"hours":"11:00〜16:00、18:00〜23:00","closed":"なし（臨時休業あり）","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。小ラーメンは二郎の中でも量が少なめとされる。麺量(g)は未確認","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":[],"notes":"夜の閉店時刻は情報源により22:00/23:00と差異あり","sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎","https://iekei.shop/jiro-ramen-shop-list","https://www.takumen.com/magazines/jiro-matome"],"taste":{"noodle_thickness":4,"noodle_firmness":3,"soup_richness":4,"emulsification":1,"pork_size":4,"pork_tenderness":4,"volume":2,"garlic_strength":null,"vegetable_ratio":null},"confidence":"high","summary":"非乳化でしょっぱめのカエシが効いた、素朴なオールド二郎系の味という評価で一致している。麺は太めで茹で加減が安定、豚は厚くホロホロ寄り。量は直系の中では少なめで、低価格と食べきりやすさが支持されている。","popular_calls":[{"call":"ニンニク・ヤサイ・アブラ・カラメ","note":"コール候補として一般的。ヤサイマシでも山は中程度なので、量を求める人には物足りない場合も"},{"call":"麺少なめ","note":"食券提示時に申告可能"}],"beginner_tip":"盛りが比較的控えめで初直系に向く。ロット制なので着席後は食べることに集中を。","review_sources":["https://ranking.net/items/9a67dd","https://ranking.net/rankings/best-jiro-stores","https://retty.me/restaurant/100000074087/","https://tabelog.com/matome/4231/"]},{"id":"jiro-sengawa","name":"ラーメン二郎 仙川店","category":"直系","chain":"ラーメン二郎","prefecture":"東京都","city":"調布市","address":"東京都調布市仙川町1-10-17","station":"仙川","lat":null,"lng":null,"hours":"17:00〜21:00","closed":"日・祝","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。小ラーメン／大ラーメン、豚入り（豚増し）が基本構成。小でも一般的なラーメンより量が多い。店舗別の麺量(g)は未確認","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":["売り切れ次第終了","店内で生麺の販売あり"],"notes":null,"sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎","https://www.takumen.com/magazines/jiro-matome"],"taste":{"noodle_thickness":null,"noodle_firmness":4,"soup_richness":5,"emulsification":1,"pork_size":null,"pork_tenderness":null,"volume":2,"garlic_strength":null,"vegetable_ratio":null},"confidence":"mid","summary":"キレのある非乳化の濃い（しょっぱめ）スープと硬めの麺が特徴。盛りは控えめとされる一方、日による当たり外れの振れ幅が大きいという声もある。夜のみ営業という情報がある。","popular_calls":[{"call":"ヤサイ・ニンニク","note":"訪問記で報告あり"}],"beginner_tip":"営業時間帯が限られるとされるので事前確認を。しょっぱめなのでカラメは不要。","review_sources":["https://ranking.net/rankings/best-jiro-stores?page=2","https://tabelog.com/matome/4231/"]},{"id":"jiro-kabukicho","name":"ラーメン二郎 新宿歌舞伎町店","category":"直系","chain":"ラーメン二郎","prefecture":"東京都","city":"新宿区","address":"東京都新宿区歌舞伎町2-37-5 日新ビル1F","station":"西武新宿／新宿","lat":null,"lng":null,"hours":"11:30頃〜翌2:30","closed":"水","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。小ラーメン／大ラーメン、豚入り（豚増し）が基本構成。小でも一般的なラーメンより量が多い。店舗別の麺量(g)は未確認","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":["有料トッピング・サイドメニューが多い"],"notes":"2016年10月に移転・改称","sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎","https://www.takumen.com/magazines/jiro-matome","https://iekei.shop/jiro-ramen-shop-list"],"taste":{"noodle_thickness":4,"noodle_firmness":null,"soup_richness":null,"emulsification":null,"pork_size":null,"pork_tenderness":null,"volume":2,"garlic_strength":null,"vegetable_ratio":null},"confidence":"low","summary":"太麺と脂身の多い豚の組み合わせ。スープの乳化度は情報源によって高め・非乳化・判別しづらいと評価が割れており、移転・リニューアルを経て変化している可能性がある。盛りは全体的に控えめという訪問記がある。","popular_calls":[{"call":"ヤサイ・ニンニク","note":"一般的なコール。ヤサイマシでも山は控えめという報告あり"}],"beginner_tip":"ロット制で着席まで待つことがある。営業時間が変動しやすいので事前確認を。","review_sources":["https://tabelog.com/matome/4231/","https://tabelog.com/matome/5500/","https://hamoni.jp/shop/CK4b903XORbwDH9c2ReM"]},{"id":"jiro-shinagawa","name":"ラーメン二郎 品川店","category":"直系","chain":"ラーメン二郎","prefecture":"東京都","city":"品川区","address":"東京都品川区北品川1-18-5","station":"北品川／品川","lat":null,"lng":null,"hours":"平日 11:00頃〜14:30頃、17:30頃〜21:00頃／土 10:00頃〜16:00頃","closed":"日・祝","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。小ラーメン／大ラーメン、豚入り（豚増し）が基本構成。小でも一般的なラーメンより量が多い。店舗別の麺量(g)は未確認","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ","タワー（ヤサイの高盛り）"],"local_rules":[],"notes":"営業時間は情報源により差異あり（jiro-matomeでは平日10:00〜14:00、17:00〜21:00）","sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎","https://www.takumen.com/magazines/jiro-matome"],"taste":{"noodle_thickness":4,"noodle_firmness":null,"soup_richness":4,"emulsification":1,"pork_size":3,"pork_tenderness":null,"volume":3,"garlic_strength":null,"vegetable_ratio":null},"confidence":"mid","summary":"醤油のパンチが効いた非乳化スープと平打ちの太麺による、懐かしさのある正統派の味という評価。豚は通常サイズで美味しいとする声と控えめとする声がある。ネギトッピングが好評。","popular_calls":[{"call":"ヤサイマシ・ニンニク","note":"訪問記で報告あり"},{"call":"ネギ","note":"さっぱり感が加わるとして推されている"}],"beginner_tip":"盛りは普通程度とされ、正統派の非乳化を試すのに向く。","review_sources":["https://hamoni.jp/shop/Iyfj3A0gjHZOrjK8O4Aq","https://ranking.net/rankings/best-jiro-stores?page=2","https://tabelog.com/matome/5500/"]},{"id":"jiro-otakibashi","name":"ラーメン二郎 新宿小滝橋通り店","category":"直系","chain":"ラーメン二郎","prefecture":"東京都","city":"新宿区","address":"東京都新宿区西新宿7-5-5","station":"新宿／西武新宿","lat":null,"lng":null,"hours":"11:00〜22:00（目安）","closed":"なし","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。小ラーメン／大ラーメン、豚入り（豚増し）が基本構成。小でも一般的なラーメンより量が多い。店舗別の麺量(g)は未確認","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":[],"notes":"主要情報源で記載が不一致（22:00/22:30閉店、年始のみ休業との記載もあり）。要確認","sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎","https://iekei.shop/jiro-ramen-shop-list","https://hamoni.jp/shop/0CMmv9PCiDfGJjYkS2mi"]},{"id":"jiro-shinshindaita","name":"ラーメン二郎 環七新新代田店","category":"直系","chain":"ラーメン二郎","prefecture":"東京都","city":"世田谷区","address":"東京都世田谷区代田5-29-5 櫻井ビル1F","station":"新代田","lat":null,"lng":null,"hours":"11:00〜15:00頃","closed":"月","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。小ラーメン／大ラーメン、豚入り（豚増し）が基本構成。小でも一般的なラーメンより量が多い。店舗別の麺量(g)は未確認","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":[],"notes":"定休日は情報源により「月・祝（不定休）」「不定休」とも。2015年に2代目店主・改称","sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎"],"taste":{"noodle_thickness":5,"noodle_firmness":4,"soup_richness":4,"emulsification":1,"pork_size":4,"pork_tenderness":null,"volume":2,"garlic_strength":null,"vegetable_ratio":null},"confidence":"mid","summary":"極太で歯ごたえのある麺と、キレのある非乳化スープが特徴とされる。豚は大きめでゴロッとしていると好評。盛りはさほど多くないが、日によって味や麺の状態が変わるという声がある。","popular_calls":[{"call":"ヤサイ・ニンニク","note":"訪問記で報告あり"}],"beginner_tip":"盛りは控えめとされるので、ヤサイを少し増しても食べきりやすい。","review_sources":["https://ranking.net/rankings/best-jiro-stores?page=2","https://tabelog.com/matome/4231/"]},{"id":"jiro-yaen","name":"ラーメン二郎 八王子野猿街道店2","category":"直系","chain":"ラーメン二郎","prefecture":"東京都","city":"八王子市","address":"東京都八王子市堀之内2-13-16","station":"京王堀之内","lat":null,"lng":null,"hours":"火〜金 11:00頃〜14:30頃、17:30頃〜21:00頃／土日は曜日別","closed":"月・月祝","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。小／大が基本。女性限定の『ポッチ』（麺・野菜少なめ、豚1枚）あり","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":[],"notes":null,"sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎","https://www.takumen.com/magazines/jiro-matome"],"taste":{"noodle_thickness":4,"noodle_firmness":4,"soup_richness":5,"emulsification":2,"pork_size":4,"pork_tenderness":null,"volume":5,"garlic_strength":null,"vegetable_ratio":null},"confidence":"high","summary":"直系屈指のパンチの強さで知られ、ワシワシした平打ち太麺と濃厚な味が特徴。乳化は控えめで辛味油がアクセントになる。量は多く、ヤサイを増すと完食が厳しいという声もあり、豚は厚いが当たり外れがあるとの指摘も。","popular_calls":[{"call":"ニンニク・ヤサイ・アブラ","note":"定番。ただしヤサイマシは量が跳ね上がるので初回は普通かチョイ増しが無難"},{"call":"辛めの選択","note":"辛味のある注文やトッピング・限定が豊富"}],"beginner_tip":"小でも量が多い。テーブル席や小さめサイズもあるので、初回は無理せず控えめに。","review_sources":["https://ranking.net/rankings/best-jiro-stores","https://hamoni.jp/shop/u4jTpYn98M6JOkplscL4","https://www.appbank.net/2023/08/30/ramen/2546927.php","https://macaro-ni.jp/70446","https://tabelog.com/matome/4231/"]},{"id":"jiro-ikebukuro","name":"ラーメン二郎 池袋東口店","category":"直系","chain":"ラーメン二郎","prefecture":"東京都","city":"豊島区","address":"東京都豊島区南池袋2-27-17 1F","station":"池袋","lat":null,"lng":null,"hours":"11:00〜15:30","closed":"火","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。小ラーメン／大ラーメン、豚入り（豚増し）が基本構成。小でも一般的なラーメンより量が多い。店舗別の麺量(g)は未確認","free_toppings":["ヤサイ","ニンニク","アブラ（黒アブラが基本、白アブラへの変更可）","カラメ"],"local_rules":[],"notes":"営業時間・定休日は情報源で大きく異なる（10:30〜16:30・月休との記載も）。要確認","sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎","https://www.takumen.com/magazines/jiro-matome","https://iekei.shop/jiro-ramen-shop-list"],"taste":{"noodle_thickness":null,"noodle_firmness":null,"soup_richness":2,"emulsification":4,"pork_size":null,"pork_tenderness":null,"volume":4,"garlic_strength":null,"vegetable_ratio":null},"confidence":"low","summary":"白っぽく薄めの乳化スープという評価が目立つ一方、味付きの黒いアブラは好評。豚の質にはばらつきがあるとされる。量は事前の想像より多めだったという訪問記がある。","popular_calls":[{"call":"アブラ","note":"味付きの黒アブラが評価されているので付ける価値あり"}],"beginner_tip":"スープが薄めと感じたらアブラで味を補うのが定番の楽しみ方。","review_sources":["https://ranking.net/rankings/best-jiro-stores?page=2","https://tabelog.com/matome/4231/"]},{"id":"jiro-kameido","name":"ラーメン二郎 亀戸店","category":"直系","chain":"ラーメン二郎","prefecture":"東京都","city":"江東区","address":"東京都江東区亀戸4-35-17","station":"亀戸","lat":null,"lng":null,"hours":"11:00〜14:30頃、17:00〜21:00頃（曜日別）","closed":null,"status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。小ラーメン／大ラーメン、豚入り（豚増し）が基本構成。小でも一般的なラーメンより量が多い。店舗別の麺量(g)は未確認","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":["臨時休業はXで告知","卓上に他店にない調味料（魚粉など）あり"],"notes":"定休日は情報源により「なし」「月曜」と不一致","sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎","https://www.takumen.com/magazines/jiro-matome","https://iekei.shop/jiro-ramen-shop-list"],"taste":{"noodle_thickness":null,"noodle_firmness":3,"soup_richness":3,"emulsification":1,"pork_size":4,"pork_tenderness":4,"volume":4,"garlic_strength":null,"vegetable_ratio":null},"confidence":"mid","summary":"やや柔らかめながら噛み応えの残る麺と、醤油ベースで軽い酸味のある非乳化スープ。豚は厚切りバラで柔らかい。量はデフォルトで多めで、汁なしやつけ麺も選べる。","popular_calls":[{"call":"ニンニクマシマシ・ヤサイ","note":"訪問記で報告あり。ただし標準でも多いので全増しは量に注意"}],"beginner_tip":"デフォルトでも盛りが良い店。トッピング増しは控えめに。","review_sources":["https://ranking.net/rankings/best-jiro-stores","https://tabelog.com/matome/4231/"]},{"id":"jiro-fuchu","name":"ラーメン二郎 府中店","category":"直系","chain":"ラーメン二郎","prefecture":"東京都","city":"府中市","address":"東京都府中市宮西町1-15-5","station":"府中","lat":null,"lng":null,"hours":"月〜金 17:00〜22:00","closed":"土・日・祝","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。小ラーメン／大ラーメン、豚入り（豚増し）が基本構成。小でも一般的なラーメンより量が多い。店舗別の麺量(g)は未確認","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":["動画撮影禁止"],"notes":null,"sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎","https://www.takumen.com/magazines/jiro-matome"],"taste":{"noodle_thickness":5,"noodle_firmness":4,"soup_richness":null,"emulsification":null,"pork_size":null,"pork_tenderness":null,"volume":null,"garlic_strength":4,"vegetable_ratio":null},"confidence":"mid","summary":"うどんを思わせる極太で弾力のある麺が最大の特徴として繰り返し挙げられる。豚は赤身で味付けが濃いめ、ニンニクは辛めだという報告がある。店主と話しやすい雰囲気が好評。","popular_calls":[{"call":"ヤサイチョイ増し・ニンニク","note":"訪問記で報告あり。ニンニクは辛めなので量は控えめからが無難"}],"beginner_tip":"極太麺は食べ進めに時間がかかるので、量は少なめから。食事時間の目安が告知されたこともあるので長居は避ける。","review_sources":["https://ranking.net/rankings/best-jiro-stores","https://tabelog.com/matome/4231/","https://gendai.media/articles/-/159181"]},{"id":"jiro-mejirodai","name":"ラーメン二郎 めじろ台店","category":"直系","chain":"ラーメン二郎","prefecture":"東京都","city":"八王子市","address":"東京都八王子市椚田町513-9","station":"めじろ台","lat":null,"lng":null,"hours":"11:00〜14:30、17:30〜20:30（日 11:00〜15:00）","closed":"木・祝（不定休）","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。小ラーメン／大ラーメン、豚入り（豚増し）が基本構成。小でも一般的なラーメンより量が多い。店舗別の麺量(g)は未確認","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":[],"notes":"旧・めじろ台法政大学前店。2023年6月に2代目店主","sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎"],"taste":{"noodle_thickness":null,"noodle_firmness":null,"soup_richness":4,"emulsification":1,"pork_size":null,"pork_tenderness":null,"volume":null,"garlic_strength":null,"vegetable_ratio":null},"confidence":"mid","summary":"醤油に漬けた黒いアブラが名物で、甘じょっぱい非乳化スープとヤサイが好評。移転後はカフェ風の店舗になったとされる。回転は遅めという指摘がある。","popular_calls":[{"call":"アブラ","note":"醤油漬けの黒アブラが店の特徴なので付ける人が多い"},{"call":"ヤサイ・ニンニクマシマシ","note":"訪問記で報告あり"}],"beginner_tip":"立地が都心から遠く回転も遅めなので、時間に余裕を持って訪問を。","review_sources":["https://ranking.net/rankings/best-jiro-stores?page=2","https://tabelog.com/matome/4231/","https://tabelog.com/matome/5500/"]},{"id":"jiro-ogikubo","name":"ラーメン二郎 荻窪店","category":"直系","chain":"ラーメン二郎","prefecture":"東京都","city":"杉並区","address":"東京都杉並区荻窪4-33-1","station":"荻窪","lat":null,"lng":null,"hours":"11:30〜14:15頃、18:00〜21:30","closed":"日（祝も休みとする情報あり）","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。小ラーメン／大ラーメン、豚入り（豚増し）が基本構成。小でも一般的なラーメンより量が多い。店舗別の麺量(g)は未確認","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":["卓上にゆず醤油・味噌・ラー油あり"],"notes":null,"sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎","https://www.takumen.com/magazines/jiro-matome","https://ogkb26.tumblr.com/"]},{"id":"jiro-kaminoge","name":"ラーメン二郎 上野毛店","category":"直系","chain":"ラーメン二郎","prefecture":"東京都","city":"世田谷区","address":"東京都世田谷区上野毛1-26-16","station":"上野毛","lat":null,"lng":null,"hours":"月〜金 11:00〜14:15頃、18:00〜22:00／土 11:00〜14:30","closed":"日・祝","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。小ラーメン／大ラーメン、豚入り（豚増し）が基本構成。小でも一般的なラーメンより量が多い。店舗別の麺量(g)は未確認","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":[],"notes":null,"sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎"],"taste":{"noodle_thickness":3,"noodle_firmness":1,"soup_richness":null,"emulsification":1,"pork_size":null,"pork_tenderness":null,"volume":null,"garlic_strength":null,"vegetable_ratio":null},"confidence":"mid","summary":"細めでデロ系のもっちりした麺と、非乳化スープのまとまりが評価されている。カラメなしでも十分美味しいという声があり、硬めで頼む客が多いとも言われる。店主の対応が親切との評判。","popular_calls":[{"call":"麺硬め","note":"デロ麺が苦手な人は硬め申告する例が多い"}],"beginner_tip":"デロ麺が特徴なので、まずはデフォルトで試し、合わなければ次回硬め申告を。","review_sources":["https://ranking.net/rankings/best-jiro-stores","https://tabelog.com/matome/5500/"]},{"id":"jiro-ichinoe","name":"ラーメン二郎 環七一之江店","category":"直系","chain":"ラーメン二郎","prefecture":"東京都","city":"江戸川区","address":"東京都江戸川区一之江8-3-4","station":"一之江","lat":null,"lng":null,"hours":"月火木金 10:30〜14:00／土日祝 9:00〜14:00","closed":"水","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。量は直系の中では少なめとされる","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":[],"notes":"夜営業（17:30〜20:30）ありとする情報源もあり","sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎","https://www.takumen.com/magazines/jiro-matome"],"taste":{"noodle_thickness":null,"noodle_firmness":2,"soup_richness":4,"emulsification":null,"pork_size":null,"pork_tenderness":null,"volume":2,"garlic_strength":null,"vegetable_ratio":null},"confidence":"low","summary":"柔らかめの麺と茶褐色のスープで、汁なしの評価が高い。豚は赤身が強く日によって塩辛く感じるという声がある。麺量は少なめでヤサイマシでも山は低めとされ、女性客も多い。","popular_calls":[{"call":"汁なし（メニュー選択）","note":"評価が高い"},{"call":"ヤサイマシ","note":"山は低めとされるので増しても過剰になりにくい"}],"beginner_tip":"量は控えめとされ、初心者や少食の人でも挑戦しやすい。","review_sources":["https://ranking.net/rankings/best-jiro-stores","https://tabelog.com/matome/4231/"]},{"id":"jiro-jimbocho","name":"ラーメン二郎 神田神保町店","category":"直系","chain":"ラーメン二郎","prefecture":"東京都","city":"千代田区","address":"東京都千代田区神田神保町1-21-4","station":"神保町","lat":null,"lng":null,"hours":"11:00〜17:30","closed":"日・祝","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。小ラーメン／大ラーメン、豚入り（豚増し）が基本構成。小でも一般的なラーメンより量が多い。店舗別の麺量(g)は未確認","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":["材料がなくなり次第終了"],"notes":"2017年12月に移転","sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎","https://www.takumen.com/magazines/jiro-matome"],"taste":{"noodle_thickness":3,"noodle_firmness":null,"soup_richness":4,"emulsification":2,"pork_size":null,"pork_tenderness":4,"volume":5,"garlic_strength":null,"vegetable_ratio":null},"confidence":"high","summary":"直系でも屈指の盛りの多さが一貫して語られる店。麺は二郎としては細めで味わい深く、スープは豚の出汁が強い非乳化寄り（時間帯で乳化具合が変わるという声も）。豚は柔らかく満足度が高い。","popular_calls":[{"call":"ニンニク・アブラ","note":"量が多いためヤサイは増さない人も多い"},{"call":"麺少なめ","note":"小でもかなり多いので初回は少なめ申告が安全"}],"beginner_tip":"小でも他店の大に近いボリューム。初訪問なら麺少なめ・ヤサイ普通で。","review_sources":["https://ranking.net/rankings/best-jiro-stores","https://tabelog.com/matome/4231/","https://tabelog.com/matome/5500/"]},{"id":"jiro-koiwa","name":"ラーメン二郎 小岩店","category":"直系","chain":"ラーメン二郎","prefecture":"東京都","city":"江戸川区","address":"東京都江戸川区西小岩3-31-13","station":"小岩","lat":null,"lng":null,"hours":"10:30頃〜麺切れまで","closed":"月・日・祝","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。『少なめ』メニューあり","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":["麺切れで終了","土曜はテイクアウトのみ"],"notes":null,"sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎","https://www.takumen.com/magazines/jiro-matome"],"taste":{"noodle_thickness":null,"noodle_firmness":4,"soup_richness":4,"emulsification":1,"pork_size":null,"pork_tenderness":null,"volume":3,"garlic_strength":null,"vegetable_ratio":null},"confidence":"mid","summary":"パッツンとした食感の麺と、液体油が多くカエシの感じられる非乳化スープの相性が評価されている。しょっぱさの塩梅が良く量も満足できるという訪問記がある。営業時間が短く訪問のハードルは高め。","popular_calls":[{"call":"ヤサイ・ニンニク・アブラ","note":"訪問記で報告あり"}],"beginner_tip":"営業時間が短いので、事前に最新の営業情報を確認してから行くこと。","review_sources":["https://ranking.net/rankings/best-jiro-stores","https://tabelog.com/matome/4231/"]},{"id":"jiro-hibarigaoka","name":"ラーメン二郎 ひばりヶ丘駅前店","category":"直系","chain":"ラーメン二郎","prefecture":"東京都","city":"西東京市","address":"東京都西東京市谷戸町3-27-24","station":"ひばりヶ丘","lat":null,"lng":null,"hours":"月火木金 11:30〜14:30、18:00〜21:00／水 11:30〜14:30／土 11:00〜17:00","closed":"日・祝（不定休）","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。小ラーメン／大ラーメン、豚入り（豚増し）が基本構成。小でも一般的なラーメンより量が多い。店舗別の麺量(g)は未確認","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":[],"notes":null,"sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎"],"taste":{"noodle_thickness":4,"noodle_firmness":4,"soup_richness":3,"emulsification":4,"pork_size":null,"pork_tenderness":null,"volume":3,"garlic_strength":null,"vegetable_ratio":null},"confidence":"high","summary":"人気ランキングで常に上位の乳化系。豚のうまみが穏やかに出たスープを醤油ダレが引き締めるバランス型で、噛み応えのある麺との一体感が評価されている。盛りは中程度で接客も丁寧とされ、初心者向けの名店として挙げられることが多い。","popular_calls":[{"call":"ニンニク・ヤサイ","note":"標準的なコールで十分満足できるという評価"},{"call":"薄め系の調整","note":"乳化スープとの相性で味を軽くする選択も好評"}],"beginner_tip":"直系デビューに推されることが多い店。ただし休日は待ちが長くなりやすいので平日昼が狙い目。","review_sources":["https://ranking.net/rankings/best-jiro-stores","https://www.appbank.net/2023/08/30/ramen/2546927.php","https://nlab.itmedia.co.jp/research/articles/3028552/amp/","https://macaro-ni.jp/70446","https://tabelog.com/matome/4231/"]},{"id":"jiro-tachikawa","name":"ラーメン二郎 立川店","category":"直系","chain":"ラーメン二郎","prefecture":"東京都","city":"立川市","address":"東京都立川市柴崎町2-10-1","station":"立川","lat":null,"lng":null,"hours":"11:00〜14:30、17:00〜21:30","closed":"火・祝（不定休）","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。小ラーメン／大ラーメン、豚入り（豚増し）が基本構成。小でも一般的なラーメンより量が多い。店舗別の麺量(g)は未確認","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":[],"notes":"定休日は情報源により「水・祝」とも。2023年1月に新店主で再開","sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎","https://iekei.shop/jiro-ramen-shop-list"]},{"id":"jiro-senjuohashi","name":"ラーメン二郎 千住大橋駅前店","category":"直系","chain":"ラーメン二郎","prefecture":"東京都","city":"足立区","address":"東京都足立区千住橋戸町10-8","station":"千住大橋","lat":null,"lng":null,"hours":"10:30〜15:30（土曜はテイクアウトのみ）","closed":"木・日・祝","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。小ラーメン／大ラーメン、豚入り（豚増し）が基本構成。小でも一般的なラーメンより量が多い。店舗別の麺量(g)は未確認","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":["土曜はテイクアウトのみ"],"notes":null,"sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎"],"taste":{"noodle_thickness":4,"noodle_firmness":1,"soup_richness":5,"emulsification":1,"pork_size":null,"pork_tenderness":5,"volume":3,"garlic_strength":null,"vegetable_ratio":null},"confidence":"mid","summary":"太くて非常に柔らかいデロ麺と、液体油が多くしょっぱさのパンチが強い非乳化スープ。豚は箸で持ち上げにくいほど柔らかいと評される。自家製ラー油系の無料トッピングが好評。","popular_calls":[{"call":"ヤサイマシ","note":"よく頼まれるが量が増えるので注意という声あり"}],"beginner_tip":"しょっぱめなのでカラメは付けずに。ヤサイマシは量に注意。","review_sources":["https://ranking.net/rankings/best-jiro-stores","https://tabelog.com/matome/4231/"]},{"id":"jiro-nishidai","name":"ラーメン二郎 西台駅前店","category":"直系","chain":"ラーメン二郎","prefecture":"東京都","city":"板橋区","address":"東京都板橋区蓮根3-9-7","station":"西台","lat":null,"lng":null,"hours":"月火木金 11:00〜13:30、17:30〜20:30／水 11:00〜13:30／土 9:30〜12:30","closed":"日・祝","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。量が多いことで知られる","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":[],"notes":null,"sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎","https://www.takumen.com/magazines/jiro-matome"],"taste":{"noodle_thickness":null,"noodle_firmness":1,"soup_richness":4,"emulsification":1,"pork_size":4,"pork_tenderness":null,"volume":4,"garlic_strength":null,"vegetable_ratio":null},"confidence":"mid","summary":"柔らかくフワフワした麺が個性で、硬さの指定は受け付けないとされる。非乳化でしょっぱめ・旨味の強いスープ、厚みのある豚が複数枚入る。粗挽き唐辛子が使えるなど独自色がある。","popular_calls":[{"call":"ニンニク","note":"訪問記で一般的"},{"call":"アブラ追加","note":"報告例あり"}],"beginner_tip":"麺の硬さ指定はできない店なので、柔らかい麺の個性を受け入れて楽しむのが前提。","review_sources":["https://ranking.net/rankings/best-jiro-stores","https://tabelog.com/matome/4231/","https://tabelog.com/matome/5500/"]},{"id":"jiro-hitotsubashi","name":"ラーメン二郎 一橋学園店","category":"直系","chain":"ラーメン二郎","prefecture":"東京都","city":"小平市","address":"東京都小平市学園西町2-13-4","station":"一橋学園","lat":null,"lng":null,"hours":"平日 11:00〜14:00、17:30〜20:30／土 11:00〜15:00、17:30〜20:30／日祝 11:00〜16:00","closed":"木（祝日は営業時に告知）","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。小ラーメン／大ラーメン、豚入り（豚増し）が基本構成。小でも一般的なラーメンより量が多い。店舗別の麺量(g)は未確認","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":[],"notes":"2022年8月開店","sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎"]},{"id":"jiro-keikyu-kawasaki","name":"ラーメン二郎 京急川崎店","category":"直系","chain":"ラーメン二郎","prefecture":"神奈川県","city":"川崎市川崎区","address":"神奈川県川崎市川崎区本町2-10","station":"京急川崎／川崎","lat":null,"lng":null,"hours":"月〜金 11:00〜14:00、18:00〜22:00／土 11:00〜16:00","closed":"日・祝","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。小ラーメン／大ラーメン、豚入り（豚増し）が基本構成。小でも一般的なラーメンより量が多い。店舗別の麺量(g)は未確認","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":[],"notes":null,"sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎"]},{"id":"jiro-sagamiono","name":"ラーメン二郎 相模大野店","category":"直系","chain":"ラーメン二郎","prefecture":"神奈川県","city":"相模原市南区","address":"神奈川県相模原市南区相模大野6-14-9","station":"相模大野","lat":null,"lng":null,"hours":"火 10:20〜14:00／水木 10:20〜14:00、17:00〜20:30／金 17:00〜20:30／土日 10:00〜15:00","closed":"月","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。小ラーメン／大ラーメン、豚入り（豚増し）が基本構成。小でも一般的なラーメンより量が多い。店舗別の麺量(g)は未確認","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":[],"notes":"通称『スモジ』","sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎","https://sumoji.jp/"]},{"id":"jiro-kannai","name":"ラーメン二郎 横浜関内店","category":"直系","chain":"ラーメン二郎","prefecture":"神奈川県","city":"横浜市中区","address":"神奈川県横浜市中区長者町6-94","station":"伊勢佐木長者町／関内","lat":null,"lng":null,"hours":"11:00〜14:30、17:30〜22:00","closed":"水","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。小ラーメン／大ラーメン、豚入り（豚増し）が基本構成。小でも一般的なラーメンより量が多い。店舗別の麺量(g)は未確認","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":[],"notes":"夜の時間帯は情報源により17:00〜21:00とも","sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎","https://iekei.shop/jiro-ramen-shop-list"],"taste":{"noodle_thickness":null,"noodle_firmness":4,"soup_richness":3,"emulsification":5,"pork_size":3,"pork_tenderness":5,"volume":3,"garlic_strength":null,"vegetable_ratio":null},"confidence":"high","summary":"背脂多めの強い乳化スープで、甘じょっぱくまろやかな味わいという評価が多い（甘すぎるという意見も）。豚はふわとろで柔らかく、看板は卵黄入りの汁なし。麺は歯応えありとする声と、縮れが少なく二郎らしさが薄いとする声に分かれる。","popular_calls":[{"call":"汁なし＋ヤサイニンニク","note":"店の人気メニュー。汁なしを目当てに訪れる人が多い"},{"call":"ニラキムチ・白髪ねぎ等のトッピング","note":"甘めの味の変化付けとして話題"}],"beginner_tip":"量と味のバランスが良く初心者にも食べやすいとされる。迷ったら汁なしを試す価値あり。","review_sources":["https://ranking.net/items/7ac970","https://ranking.net/rankings/best-jiro-stores","https://www.timeout.jp/tokyo/ja/レストラン/ramen-jiro-yokohama-kannai","https://tabelog.com/matome/4231/"]},{"id":"jiro-shonan-fujisawa","name":"ラーメン二郎 湘南藤沢店","category":"直系","chain":"ラーメン二郎","prefecture":"神奈川県","city":"藤沢市","address":"神奈川県藤沢市本町1-10-14","station":"藤沢","lat":null,"lng":null,"hours":"11:00〜14:30、17:00〜21:00","closed":"火","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。小ラーメン／大ラーメン、豚入り（豚増し）が基本構成。小でも一般的なラーメンより量が多い。店舗別の麺量(g)は未確認","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":[],"notes":null,"sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎"]},{"id":"jiro-nakayama","name":"ラーメン二郎 中山駅前店","category":"直系","chain":"ラーメン二郎","prefecture":"神奈川県","city":"横浜市緑区","address":"神奈川県横浜市緑区台村町309-1","station":"中山","lat":null,"lng":null,"hours":"11:00〜14:00、18:00〜21:30","closed":"木","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。小ラーメン／大ラーメン、豚入り（豚増し）が基本構成。小でも一般的なラーメンより量が多い。店舗別の麺量(g)は未確認","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":[],"notes":null,"sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎"],"taste":{"noodle_thickness":null,"noodle_firmness":null,"soup_richness":3,"emulsification":null,"pork_size":null,"pork_tenderness":4,"volume":null,"garlic_strength":null,"vegetable_ratio":4},"confidence":"mid","summary":"バランス型のスープで、汁なしやつけ麺の評価が高い。ヤサイはキャベツの比率が高めで新鮮だとされ、豚はホロホロで塩気が効いているという報告がある。トッピングの種類が豊富。","popular_calls":[{"call":"ヤサイ","note":"キャベツ多めのヤサイが好評なので標準〜マシで楽しむ人が多い"},{"call":"汁なし・つけ麺（メニュー選択）","note":"ラーメン以外の評価も高い"}],"beginner_tip":"開店直後から行列になりやすいので、時間に余裕を持って。","review_sources":["https://ranking.net/rankings/best-jiro-stores","https://tabelog.com/matome/5500/"]},{"id":"jiro-ikuta","name":"ラーメン二郎 生田駅前店","category":"直系","chain":"ラーメン二郎","prefecture":"神奈川県","city":"川崎市多摩区","address":"神奈川県川崎市多摩区生田8-1-15","station":"生田","lat":null,"lng":null,"hours":"11:00〜15:00、18:00〜21:00","closed":"水","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。小ラーメン／大ラーメン、豚入り（豚増し）が基本構成。小でも一般的なラーメンより量が多い。店舗別の麺量(g)は未確認","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":[],"notes":"2023年5月開店","sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎"]},{"id":"jiro-matsudo","name":"ラーメン二郎 松戸駅前店Ⅲ","category":"直系","chain":"ラーメン二郎","prefecture":"千葉県","city":"松戸市","address":"千葉県松戸市本町17-21","station":"松戸","lat":null,"lng":null,"hours":"月〜土 17:30頃〜21:30頃","closed":"日・祝（不定休）","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。小ラーメン／大ラーメン、豚入り（豚増し）が基本構成。小でも一般的なラーメンより量が多い。店舗別の麺量(g)は未確認","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":[],"notes":"番地は情報源により17-9とも","sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎"],"taste":{"noodle_thickness":4,"noodle_firmness":2,"soup_richness":4,"emulsification":3,"pork_size":5,"pork_tenderness":null,"volume":4,"garlic_strength":null,"vegetable_ratio":null},"confidence":"mid","summary":"太く柔らかめの麺で本店に近いとされる。スープは乳化寄りの甘じょっぱい味、豚は大きく赤身が多い。量が多めで、ヤサイマシの山が印象的だという声がある。","popular_calls":[{"call":"ヤサイマシ","note":"山の高さが印象に残るという報告あり。量に自信がなければ普通で"}],"beginner_tip":"行列が常に長いので時間に余裕を。量は多めなので小を選択。","review_sources":["https://ranking.net/rankings/best-jiro-stores","https://tabelog.com/matome/4231/"]},{"id":"jiro-keisei-okubo","name":"ラーメン二郎 京成大久保店","category":"直系","chain":"ラーメン二郎","prefecture":"千葉県","city":"船橋市","address":"千葉県船橋市三山2-1-11","station":"京成大久保","lat":null,"lng":null,"hours":"11:00〜15:00","closed":"火・木・日・祝","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。小ラーメン／大ラーメン、豚入り（豚増し）が基本構成。小でも一般的なラーメンより量が多い。店舗別の麺量(g)は未確認","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":[],"notes":"定休日は情報源により「日・祝」のみとも。要確認","sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎"],"taste":{"noodle_thickness":null,"noodle_firmness":2,"soup_richness":4,"emulsification":null,"pork_size":null,"pork_tenderness":4,"volume":null,"garlic_strength":null,"vegetable_ratio":null},"confidence":"mid","summary":"濃いめの味付けで、麺・豚ともに柔らかめという傾向が報告されている。特に味噌ラーメンの評価が高く、通常の醤油と並ぶ看板になっている。少なめの食券が用意されている点も入りやすさとして挙げられる。","popular_calls":[{"call":"ニンニク","note":"訪問記で一般的なコール"},{"call":"味噌ラーメン（メニュー選択）","note":"この店ならではの選択肢として推されることが多い"}],"beginner_tip":"少なめの食券があるので、量が不安なら最初はそれを選ぶと安心。","review_sources":["https://ranking.net/rankings/best-jiro-stores","https://www.appbank.net/2023/08/30/ramen/2546927.php","https://tabelog.com/matome/4231/"]},{"id":"jiro-kashiwa","name":"ラーメン二郎 柏店","category":"直系","chain":"ラーメン二郎","prefecture":"千葉県","city":"柏市","address":"千葉県柏市十余二249-5 MEM柏1F","station":"柏の葉キャンパス","lat":null,"lng":null,"hours":"10:30〜16:00","closed":"日","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。麺量は券売機に表示されている","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":[],"notes":"茨城守谷店が移転し2023年1月開店。営業時間・定休日は情報源で差異（夜営業あり・月休との記載も）","sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎","https://www.takumen.com/magazines/jiro-matome","https://iekei.shop/jiro-ramen-shop-list"],"taste":{"noodle_thickness":null,"noodle_firmness":1,"soup_richness":null,"emulsification":2,"pork_size":4,"pork_tenderness":null,"volume":5,"garlic_strength":null,"vegetable_ratio":null},"confidence":"mid","summary":"守谷店の移転で開店した店で、いわゆるモリジ系のデロデロ麺と微乳化スープが特徴とされる。豚はボリュームがあり、盛りも多いため少なめ注文が推奨されている。","popular_calls":[{"call":"麺少なめ","note":"盛りが多いので少なめ注文が推奨されている"}],"beginner_tip":"量が多い店として知られるので、迷わず麺少なめで。","review_sources":["https://ranking.net/rankings/best-jiro-stores?page=2","https://tabelog.com/matome/5500/"]},{"id":"jiro-chiba","name":"ラーメン二郎 千葉店","category":"直系","chain":"ラーメン二郎","prefecture":"千葉県","city":"千葉市中央区","address":"千葉県千葉市中央区中央1-7-8","station":"葭川公園／千葉中央","lat":null,"lng":null,"hours":"11:00〜14:30、17:30〜21:30","closed":"日・祝（不定休）","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。小ラーメン／大ラーメン、豚入り（豚増し）が基本構成。小でも一般的なラーメンより量が多い。店舗別の麺量(g)は未確認","free_toppings":["ヤサイ","ニンニク","アブラ（ブタカス入りの味付きアブラ）","カラメ"],"local_rules":[],"notes":null,"sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎","https://www.takumen.com/magazines/jiro-matome"],"taste":{"noodle_thickness":null,"noodle_firmness":4,"soup_richness":4,"emulsification":1,"pork_size":null,"pork_tenderness":null,"volume":null,"garlic_strength":null,"vegetable_ratio":null},"confidence":"mid","summary":"非乳化で油層が厚く、カエシの強いスープ。縮れ気味で硬めの麺と、赤身が多く味の染みた豚が評価されている。接客の評判も良い。","popular_calls":[{"call":"ニンニク多め","note":"訪問記でニンニクを多めにする例あり"}],"beginner_tip":"キレのある非乳化系。しょっぱさが気になる人はカラメは付けずに。","review_sources":["https://ranking.net/rankings/best-jiro-stores","https://tabelog.com/matome/5500/"]},{"id":"jiro-tochigi-kaido","name":"ラーメン二郎 栃木街道店","category":"直系","chain":"ラーメン二郎","prefecture":"栃木県","city":"下都賀郡壬生町","address":"栃木県下都賀郡壬生町本丸2-15-67","station":"壬生","lat":null,"lng":null,"hours":"月〜金 11:30頃〜14:45頃、18:00頃〜21:00頃／土 11:30頃〜16:00頃","closed":"日・祝（不定休）","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。小ラーメン／大ラーメン、豚入り（豚増し）が基本構成。小でも一般的なラーメンより量が多い。店舗別の麺量(g)は未確認","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":[],"notes":null,"sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎"],"taste":{"noodle_thickness":null,"noodle_firmness":null,"soup_richness":4,"emulsification":2,"pork_size":null,"pork_tenderness":null,"volume":null,"garlic_strength":null,"vegetable_ratio":null},"confidence":"low","summary":"豚の評判が非常に高い店。スープは微乳化で塩気が強めという指摘がある。味変の選択肢も楽しめるとされ、繁忙期には長時間待ちになることもある。","popular_calls":[{"call":"ヤサイチョイ増し・ニンニクマシマシ","note":"訪問記で報告あり"}],"beginner_tip":"年末など繁忙期は大行列になることがあるので、時期を選んで訪問を。","review_sources":["https://ranking.net/rankings/best-jiro-stores?page=2","https://tabelog.com/matome/4231/"]},{"id":"jiro-sendai","name":"ラーメン二郎 仙台店","category":"直系","chain":"ラーメン二郎","prefecture":"宮城県","city":"仙台市青葉区","address":"宮城県仙台市青葉区一番町2-5-32 第一観光ビル1F","station":null,"lat":null,"lng":null,"hours":"月〜金 11:00〜14:30、17:00〜21:00／土日祝 11:00〜21:00","closed":"原則無休","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。小ラーメン／大ラーメン、豚入り（豚増し）が基本構成。小でも一般的なラーメンより量が多い。店舗別の麺量(g)は未確認","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":[],"notes":"一部情報源では『仙台店2』表記。最寄駅は情報源の住所と整合しないため未記入","sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎"],"taste":{"noodle_thickness":null,"noodle_firmness":2,"soup_richness":3,"emulsification":5,"pork_size":2,"pork_tenderness":null,"volume":3,"garlic_strength":null,"vegetable_ratio":null},"confidence":"mid","summary":"ド乳化で油が多く飲みやすいスープに、柔らかめの麺という組み合わせ。豚は薄めで脂多めとされ、盛りは前評判ほどではないという訪問記もある。玉ねぎやキムチ系トッピングとの相性が話題。","popular_calls":[{"call":"玉ねぎ・キムチ系トッピング","note":"乳化スープとの相性が良いとして推されている"}],"beginner_tip":"盛りは極端ではないとされ、地方遠征の初二郎にも向く。","review_sources":["https://ranking.net/rankings/best-jiro-stores","https://tabelog.com/matome/5500/"]},{"id":"jiro-sapporo","name":"ラーメン二郎 札幌店","category":"直系","chain":"ラーメン二郎","prefecture":"北海道","city":"札幌市北区","address":"北海道札幌市北区北6条西8丁目8-11","station":"札幌","lat":null,"lng":null,"hours":"月〜金 11:00〜14:00、17:00〜20:30／土 10:30〜14:30","closed":"日（祝も休みとする情報あり）","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。小ラーメン／大ラーメン、豚入り（豚増し）が基本構成。小でも一般的なラーメンより量が多い。店舗別の麺量(g)は未確認","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":[],"notes":null,"sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎"],"taste":{"noodle_thickness":4,"noodle_firmness":null,"soup_richness":2,"emulsification":null,"pork_size":null,"pork_tenderness":4,"volume":null,"garlic_strength":null,"vegetable_ratio":null},"confidence":"low","summary":"もちもちの太麺とモチホロ系の豚が特徴で、ヤサイの評価が高い。スープはやや薄味という感想があり、醤油ダレで調整する余地があるとされる。サイズは小のみという指摘がある。","popular_calls":[{"call":"カラメ系の調整","note":"薄味と感じる人は醤油ダレで濃くする例がある"}],"beginner_tip":"小のみの提供とされるので、サイズ選びに迷う必要がない。天候で待ち状況が変わりやすい。","review_sources":["https://ranking.net/rankings/best-jiro-stores?page=2","https://tabelog.com/matome/5500/"]},{"id":"jiro-aizuwakamatsu","name":"ラーメン二郎 会津若松駅前店","category":"直系","chain":"ラーメン二郎","prefecture":"福島県","city":"会津若松市","address":"福島県会津若松市駅前町6-31","station":"会津若松","lat":null,"lng":null,"hours":"火〜金 11:00〜14:00、17:00〜21:00／土・第2・4日曜・祝 11:00〜15:00","closed":"月・第1・3・5日曜（不定休）","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。小ラーメン／大ラーメン、豚入り（豚増し）が基本構成。小でも一般的なラーメンより量が多い。店舗別の麺量(g)は未確認","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":[],"notes":null,"sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎"]},{"id":"jiro-niigata","name":"ラーメン二郎 新潟店","category":"直系","chain":"ラーメン二郎","prefecture":"新潟県","city":"新潟市中央区","address":"新潟県新潟市中央区万代5-2-8","station":"新潟","lat":null,"lng":null,"hours":"火水金 10:45〜13:45、16:30〜21:00／土日 9:30〜15:00","closed":"月・木","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。量が多いとされる","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":[],"notes":null,"sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎","https://www.takumen.com/magazines/jiro-matome","https://www.instagram.com/jiro.niigata/"],"taste":{"noodle_thickness":null,"noodle_firmness":null,"soup_richness":4,"emulsification":4,"pork_size":null,"pork_tenderness":5,"volume":3,"garlic_strength":null,"vegetable_ratio":null},"confidence":"low","summary":"乳化に液体油が加わった重めのスープと、ふわとろの豚が好評。量は満足できる程度という訪問記がある。開店直後から行列になりやすい。","popular_calls":[],"beginner_tip":"スープが重めなので、アブラ増しは控えめにするのが無難。","review_sources":["https://ranking.net/rankings/best-jiro-stores?page=2","https://tabelog.com/matome/5500/"]},{"id":"jiro-kawagoe","name":"ラーメン二郎 川越店","category":"直系","chain":"ラーメン二郎","prefecture":"埼玉県","city":"川越市","address":"埼玉県川越市旭町1-4-15","station":"川越","lat":null,"lng":null,"hours":"火〜土 11:00頃〜14:00、18:00〜21:00／日 11:00〜14:00","closed":"月","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。小ラーメン／大ラーメン、豚入り（豚増し）が基本構成。小でも一般的なラーメンより量が多い。店舗別の麺量(g)は未確認","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":[],"notes":null,"sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎"]},{"id":"jiro-koshigaya","name":"ラーメン二郎 越谷店","category":"直系","chain":"ラーメン二郎","prefecture":"埼玉県","city":"越谷市","address":"埼玉県越谷市越ヶ谷2-3-7","station":"越谷","lat":null,"lng":null,"hours":"11:00〜14:30、17:00〜20:30","closed":"土・日","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。小ラーメン／大ラーメン、豚入り（豚増し）が基本構成。小でも一般的なラーメンより量が多い。店舗別の麺量(g)は未確認","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":[],"notes":"営業時間は情報源により11:30〜19:00通し営業とも。要確認","sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎"],"taste":{"noodle_thickness":4,"noodle_firmness":null,"soup_richness":4,"emulsification":1,"pork_size":5,"pork_tenderness":null,"volume":null,"garlic_strength":null,"vegetable_ratio":null},"confidence":"mid","summary":"非乳化で醤油のカエシがキリッと効いたスープが好評。小麦感の強い太麺と、大きく質量のある豚が評価され、ヤサイはシャキシャキ寄り。胃もたれしにくいという感想もある。","popular_calls":[{"call":"ニンニク・ヤサイ","note":"標準的なコールで報告あり（具体的な推奨傾向の情報は少ない）"}],"beginner_tip":"非乳化のキレ系が好きな人に向く。豚が大きいので量は控えめに頼むと安心。","review_sources":["https://ranking.net/rankings/best-jiro-stores","https://tabelog.com/matome/5500/"]},{"id":"jiro-omiya-koen","name":"ラーメン二郎 大宮公園駅前店","category":"直系","chain":"ラーメン二郎","prefecture":"埼玉県","city":"さいたま市大宮区","address":"埼玉県さいたま市大宮区寿能町1-24 前場ビル1F","station":"大宮公園","lat":null,"lng":null,"hours":"月火木金土 11:30〜14:30、17:30〜21:00／日祝 11:00〜15:00","closed":"水","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。小ラーメン／大ラーメン、豚入り（豚増し）が基本構成。小でも一般的なラーメンより量が多い。店舗別の麺量(g)は未確認","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ","ショウガ"],"local_rules":[],"notes":null,"sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎","https://www.takumen.com/magazines/jiro-matome","https://iekei.shop/jiro-ramen-shop-list"]},{"id":"jiro-kyoto","name":"ラーメン二郎 京都店","category":"直系","chain":"ラーメン二郎","prefecture":"京都府","city":"京都市左京区","address":"京都府京都市左京区一乗寺里ノ前町4番","station":"一乗寺（叡山電鉄）","lat":null,"lng":null,"hours":"昼 11:00〜14:00（土日〜14:30）／夜 18:00（土日17:30）〜21:30（日〜20:30）","closed":"水・不定休","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。小ラーメン／大ラーメン、豚入り（豚増し）が基本構成。小でも一般的なラーメンより量が多い。店舗別の麺量(g)は未確認","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":[],"notes":null,"sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎"]},{"id":"jiro-maebashi","name":"ラーメン二郎 前橋千代田町店","category":"直系","chain":"ラーメン二郎","prefecture":"群馬県","city":"前橋市","address":"群馬県前橋市千代田町4-12-3","station":"中央前橋","lat":null,"lng":null,"hours":"10:30〜14:30、17:00〜20:00","closed":"月","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。小ラーメン／大ラーメン、豚入り（豚増し）が基本構成。小でも一般的なラーメンより量が多い。店舗別の麺量(g)は未確認","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":["材料がなくなり次第終了"],"notes":"曜日により昼のみ営業との情報もあり","sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎","https://www.takumen.com/magazines/jiro-matome","https://retty.me/restaurant/100001508840/"]},{"id":"jiro-hitachinaka","name":"ラーメン二郎 ひたちなか店","category":"直系","chain":"ラーメン二郎","prefecture":"茨城県","city":"ひたちなか市","address":"茨城県ひたちなか市田彦1648-4","station":"勝田","lat":null,"lng":null,"hours":"平日 11:00頃〜14:30頃、17:30頃〜21:00頃／土・祝 10:00頃〜16:00頃","closed":"日（連休時は変更あり）","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。小ラーメン／大ラーメン、豚入り（豚増し）が基本構成。小でも一般的なラーメンより量が多い。店舗別の麺量(g)は未確認","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":["材料がなくなり次第終了"],"notes":null,"sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎","https://www.takumen.com/magazines/jiro-matome"]},{"id":"jiro-asakura-kaido","name":"ラーメン二郎 朝倉街道駅前店","category":"直系","chain":"ラーメン二郎","prefecture":"福岡県","city":"筑紫野市","address":"福岡県筑紫野市針摺中央2-17-8","station":"朝倉街道（西鉄）","lat":null,"lng":null,"hours":"月火木金 11:30〜14:30、18:00〜21:00／水 11:30〜14:30","closed":"土・日・祝（不定休）","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。小ラーメン／大ラーメン、豚入り（豚増し）が基本構成。小でも一般的なラーメンより量が多い。店舗別の麺量(g)は未確認","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":[],"notes":"2024年12月開店（九州初）。営業時間・定休日は情報源で差異が大きい。要確認","sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎","https://iekei.shop/jiro-ramen-shop-list"]},{"id":"jiro-nagoya-ozone","name":"ラーメン二郎 名古屋大曽根店","category":"直系","chain":"ラーメン二郎","prefecture":"愛知県","city":"名古屋市東区","address":"愛知県名古屋市東区矢田4-3-7","station":"大曽根","lat":null,"lng":null,"hours":"月〜金 11:00〜14:00、17:00〜21:00／土祝 10:00〜16:00","closed":"日","status":"営業中","call_timing":"（直系共通の一般的な流れ）着丼直前に店員から『ニンニク入れますか？』等と聞かれた時点でトッピングを申告。店舗により並び中・食券確認時に麺量（少なめ・半分等）を聞かれる。店舗個別の確認は未実施","ticket_notes":"食券制。小ラーメン／大ラーメン、豚入り（豚増し）が基本構成。小でも一般的なラーメンより量が多い。店舗別の麺量(g)は未確認","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":[],"notes":"2025年11月30日開店（東海初）","sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎","https://iekei.shop/jiro-ramen-shop-list"]},{"id":"jiro-okinawa","name":"ラーメン二郎 沖縄店","category":"直系","chain":"ラーメン二郎","prefecture":"沖縄県","city":"那覇市","address":"沖縄県那覇市壺屋1-6-16","station":"牧志（ゆいレール、徒歩約10分）","lat":null,"lng":null,"hours":"月〜土 11:00〜14:00、17:00〜20:00／日 11:00〜15:00（売り切れ次第終了の場合あり）","closed":"水","status":"営業中","call_timing":"食券購入時（入店時）に麺量を確認され、少なめ・半分も可。その後、店員に聞かれたタイミングでヤサイ・ニンニク・アブラ・カラメの増減を申告","ticket_notes":"開店時（2026年6月）：小ラーメン900円、小豚1,100円、大ラーメン1,050円、大豚1,250円、沖縄県民ラーメン800円。麺量は他の直系より少なめとされる","free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":["撮影は料理のみ可（店内・券売機の撮影は不可）","食後は丼とコップをカウンター上へ戻し、テーブルを拭く","卓上にコーレーグースあり","専用駐車場なし"],"notes":"2026年6月20日プレオープン、21日正式開店（沖縄初）。トッピングが無料かは記事に明記なし","sources":["https://www.ramenjiro-pleasure.com/infoall/","https://jiro-matome.com/store-info/","https://ja.wikipedia.org/wiki/ラーメン二郎","https://getnews.jp/archives/3725700","https://naha.goguynet.jp/2026/06/27/ramenziro/"]},{"id":"jiro-sakuradai","name":"ラーメン二郎 桜台駅前店","category":"直系","chain":"ラーメン二郎","prefecture":"東京都","city":"練馬区","address":null,"station":"桜台","lat":null,"lng":null,"hours":null,"closed":null,"status":"閉店","call_timing":null,"ticket_notes":null,"free_toppings":[],"local_rules":[],"notes":"2025年3月2日閉店","sources":["https://ja.wikipedia.org/wiki/ラーメン二郎"],"taste":{"noodle_thickness":null,"noodle_firmness":1,"soup_richness":2,"emulsification":3,"pork_size":null,"pork_tenderness":4,"volume":null,"garlic_strength":null,"vegetable_ratio":null},"confidence":"high","summary":"柔らかいデロ麺が定番として語られる店。スープは微乳化〜軽い乳化のマイルド系で、二郎としてはしょっぱさ控えめとされる。豚は柔らかく、味付きアブラやネギ、限定メニューが好評。","popular_calls":[{"call":"ニンニク・アブラ","note":"味付きアブラの評価が高い"},{"call":"ヤサイ少なめ","note":"口コミでは少なめで頼む例も見られる"}],"beginner_tip":"塩辛い二郎が苦手な人に向く。行列が急に伸びやすいので早めの到着を。","review_sources":["https://ranking.net/rankings/best-jiro-stores","https://hamoni.jp/shop/RmR7rcMv8al85eQ0yQBe","https://tabelog.com/matome/4231/"]},{"id":"jiro-ibaraki-moriya","name":"ラーメン二郎 茨城守谷店","category":"直系","chain":"ラーメン二郎","prefecture":"茨城県","city":"守谷市","address":null,"station":null,"lat":null,"lng":null,"hours":null,"closed":null,"status":"閉店","call_timing":null,"ticket_notes":null,"free_toppings":[],"local_rules":[],"notes":"2022年12月まで営業し柏市へ移転、2023年1月に『柏店』として開店（jiro-kashiwa）","sources":["https://ja.wikipedia.org/wiki/ラーメン二郎"]},{"id":"jiro-shinkoganei","name":"ラーメン二郎 新小金井街道店","category":"直系","chain":"ラーメン二郎","prefecture":"東京都","city":"小金井市","address":null,"station":null,"lat":null,"lng":null,"hours":null,"closed":null,"status":"閉店","call_timing":null,"ticket_notes":null,"free_toppings":[],"local_rules":[],"notes":"2001年開店、2018年12月閉店","sources":["https://ja.wikipedia.org/wiki/ラーメン二郎"]},{"id":"jiro-jr-nishiguchi-kamata","name":"ラーメン二郎 JR西口蒲田店","category":"直系","chain":"ラーメン二郎","prefecture":"東京都","city":"大田区","address":null,"station":"蒲田","lat":null,"lng":null,"hours":null,"closed":null,"status":"閉店","call_timing":null,"ticket_notes":null,"free_toppings":[],"local_rules":[],"notes":"旧・鶴見店（1996年開店）が2014年11月に移転。2019年10月閉店","sources":["https://ja.wikipedia.org/wiki/ラーメン二郎"]},{"id":"jiro-shimbashi","name":"ラーメン二郎 新橋店","category":"直系","chain":"ラーメン二郎","prefecture":"東京都","city":"港区","address":null,"station":"新橋","lat":null,"lng":null,"hours":null,"closed":null,"status":"閉店","call_timing":null,"ticket_notes":null,"free_toppings":[],"local_rules":[],"notes":"2代目店舗（2011年開店）が2018年4月閉店","sources":["https://ja.wikipedia.org/wiki/ラーメン二郎"]},{"id":"jiro-akabane","name":"ラーメン二郎 赤羽店","category":"直系","chain":"ラーメン二郎","prefecture":"東京都","city":"北区","address":null,"station":"赤羽","lat":null,"lng":null,"hours":null,"closed":null,"status":"閉店","call_timing":null,"ticket_notes":null,"free_toppings":[],"local_rules":[],"notes":"2代目店舗（2012年開店）が2017年4月閉店。初代は2001年に独立し、現在のラーメン富士丸の源流","sources":["https://ja.wikipedia.org/wiki/ラーメン二郎"]},{"id":"jiro-omiya","name":"ラーメン二郎 大宮店","category":"直系","chain":"ラーメン二郎","prefecture":"埼玉県","city":"さいたま市大宮区","address":null,"station":"大宮","lat":null,"lng":null,"hours":null,"closed":null,"status":"閉店","call_timing":null,"ticket_notes":null,"free_toppings":[],"local_rules":[],"notes":"2016年11月閉店","sources":["https://ja.wikipedia.org/wiki/ラーメン二郎"]},{"id":"jiro-takadanobaba","name":"ラーメン二郎 高田馬場店","category":"直系","chain":"ラーメン二郎","prefecture":"東京都","city":null,"address":null,"station":"高田馬場","lat":null,"lng":null,"hours":null,"closed":null,"status":"閉店","call_timing":null,"ticket_notes":null,"free_toppings":[],"local_rules":[],"notes":"2010年移転、2013年3月閉店","sources":["https://ja.wikipedia.org/wiki/ラーメン二郎"]},{"id":"senrigan","name":"千里眼","category":"インスパイア","chain":"単独店","prefecture":"東京都","city":"目黒区","address":"東京都目黒区駒場4-6-8 佐藤ビル1F","station":"東北沢（徒歩8分）／駒場東大前・池ノ上（徒歩10分）","lat":null,"lng":null,"hours":"11:00〜15:00、17:00〜21:00","closed":"水","status":"営業中","call_timing":null,"ticket_notes":null,"free_toppings":[],"local_rules":["両替はなるべく避けるよう案内あり","カウンター12席"],"notes":null,"sources":["https://tabelog.com/tokyo/A1318/A131811/13099150/"],"taste":{"noodle_thickness":4,"noodle_firmness":null,"soup_richness":5,"emulsification":4,"pork_size":4,"pork_tenderness":4,"volume":5,"garlic_strength":null,"vegetable_ratio":3},"confidence":"mid","summary":"駒場の人気店で、長時間煮込んだ豚骨のとろみある濃厚スープが際立つとされる。太い縮れ麺は標準で300g、ホロホロの豚とヤサイ（もやし・キャベツ）の山盛りでかなりの大盛り。辛揚げ（からあげ）トッピングが名物。","popular_calls":[{"call":"ニンニク","note":"無料トッピングで提供前に確認される"},{"call":"からあげ（辛揚げ）トッピング","note":"この店の名物として人気"},{"call":"麺少なめ・半分","note":"標準300gと多いため申告する人も多い"}],"beginner_tip":"標準でも麺300gの大盛り。食券購入後に麺量を減らす申告ができるので遠慮なく使うこと。","review_sources":["https://tabelog.com/tokyo/A1318/A131811/13099150/","https://www.timeout.com/tokyo/restaurants/senrigan","https://www.timeout.jp/tokyo/ja/restaurant/jiro-insupaia-ramen","https://macaro-ni.jp/59937"]},{"id":"butayama-machida","name":"ラーメン豚山 町田店","category":"インスパイア","chain":"豚山","prefecture":"東京都","city":"町田市","address":"東京都町田市原町田6-20-3 あさのビル1F","station":"町田","lat":null,"lng":null,"hours":null,"closed":"無休（食べログ記載）","status":"営業中","call_timing":null,"ticket_notes":null,"free_toppings":["ニンニク","アブラ","カラメ"],"local_rules":["現金のみ（カード・電子マネー・QR不可、食べログ記載）","カウンター12席"],"notes":"2018年7月開店。営業時間は公式HPで確認するよう案内あり。無料トッピングは口コミ由来","sources":["https://tabelog.com/tokyo/A1327/A132701/13223633/"],"taste":{"noodle_thickness":null,"noodle_firmness":4,"soup_richness":2,"emulsification":3,"pork_size":null,"pork_tenderness":4,"volume":3,"garlic_strength":null,"vegetable_ratio":null},"confidence":"low","summary":"チェーン展開する二郎系の代表格。固めの麺に、微乳化で二郎系にしては優しい味のスープという口コミがある。豚はほろほろ系で、ミニ（麺125g）から大ぶたまでサイズの選択肢が広い。","popular_calls":[{"call":"ヤサイ・ニンニク・アブラの増減","note":"無料で増減でき、提供直前に聞かれる方式"},{"call":"ミニラーメン","note":"麺125gのサイズ。量が不安な人向け"}],"beginner_tip":"券売機でキャッシュレス決済にも対応しており、二郎系入門に向く。","review_sources":["https://hamoni.jp/shop/2tB9rdsm0zGkkm7y5Lqb","https://honichi.com/reports/202504_jirokeiinspire/"]},{"id":"ramenso-rekishi","name":"ラーメン荘 歴史を刻め 下新庄本店","category":"インスパイア","chain":"ラーメン荘","prefecture":"大阪府","city":"大阪市東淀川区","address":"大阪府大阪市東淀川区下新庄5-1-59","station":"下新庄（阪急千里線、徒歩3分）","lat":null,"lng":null,"hours":"月〜土 11:00〜15:00、18:00〜23:00","closed":"日","status":"営業中","call_timing":null,"ticket_notes":"麺量は口コミで並300gとの記載（公式表記は未確認）","free_toppings":[],"local_rules":["支払いは現金かPayPay。PayPayの場合はスタッフに伝えて食券を受け取ってから列に並ぶ","食券はカウンターの見える位置に置く","下新庄小学校前のコインパーキングは利用不可","吸殻・空き缶のポイ捨てや近隣迷惑行為は禁止"],"notes":null,"sources":["https://tabelog.com/osaka/A2701/A270307/27051592/"],"taste":{"noodle_thickness":4,"noodle_firmness":3,"soup_richness":4,"emulsification":2,"pork_size":5,"pork_tenderness":4,"volume":5,"garlic_strength":4,"vegetable_ratio":null},"confidence":"low","summary":"関西のラーメン荘系を代表する店。もちもちで歯応えもある太麺に、醤油の効いた濃い味ながら澄んだ印象のスープで、アブラが溶けると脂の甘みが増す。豚ラーメンは極厚チャーシューが多数入り、並でも一般店の約3倍という大ボリューム。","popular_calls":[{"call":"ニンニク有り/無し","note":"ヤサイとアブラは標準で入るため、基本はニンニクの有無を伝えるだけでよいとされる"},{"call":"全マシマシ","note":"完食困難なレベルになるという体験談あり。初心者は非推奨"}],"beginner_tip":"並でも量が多く、少なめでも一般店の大盛り相当とされる。初回は少なめを検討。","review_sources":["https://www.gigazine.net/news/20150308-ramen-rekishi-wo-kizame/","https://hamoni.jp/shop/Otl2JH5bsLyWymXbEMBL"]},{"id":"ramenso-yume","name":"ラーメン荘 夢を語れ","category":"インスパイア","chain":"ラーメン荘","prefecture":"京都府","city":"京都市左京区","address":"京都府京都市左京区一乗寺西杉ノ宮町48-1","station":"一乗寺（叡山電鉄、徒歩約5分）","lat":null,"lng":null,"hours":"火〜金 17:00〜23:00／土 12:00〜15:00、17:00〜23:00","closed":"月・日","status":"営業中","call_timing":null,"ticket_notes":"口コミ・写真キャプションではラーメン小200g、汁なし並300g","free_toppings":[],"local_rules":["写真撮影可","現金のみ","カウンター10席","駐車場なし"],"notes":"2006年10月開店。ラーメン荘系の起点となった店","sources":["https://tabelog.com/kyoto/A2603/A260303/26003256/"]},{"id":"ramenso-chikyu","name":"ラーメン荘 地球規模で考えろ","category":"インスパイア","chain":"ラーメン荘","prefecture":"京都府","city":"京都市伏見区","address":"京都府京都市伏見区撞木町1153-9","station":"伏見（近鉄、徒歩約5分）／墨染（京阪、徒歩約6分）","lat":null,"lng":null,"hours":"火〜土 11:00〜14:45、18:00〜23:45／日 11:00〜21:45","closed":"月","status":"営業中","call_timing":null,"ticket_notes":null,"free_toppings":[],"local_rules":["駐車場なし。周辺の業務スーパー・サークルK・伏見郵便局等の駐車場への駐車は禁止","現金のみ","カウンター12席"],"notes":null,"sources":["https://tabelog.com/en/kyoto/A2601/A260601/26009396/"]},{"id":"tachikawa-mashimashi","name":"立川マシマシ 立川総本店","category":"インスパイア","chain":"立川マシマシ","prefecture":"東京都","city":"立川市","address":"東京都立川市錦町1-2-16 立川アーバンホテル たま館1F","station":"立川（南口徒歩3分）","lat":null,"lng":null,"hours":"11:00〜23:00","closed":null,"status":"営業中","call_timing":"店内待ちの際に食券確認があり、麺量はこの時に申告。トッピングのコールは席番で呼ばれる","ticket_notes":null,"free_toppings":["ヤサイ","アブラ"],"local_rules":["臨時休業・限定の告知はInstagram","現金のみ","カウンター15席"],"notes":null,"sources":["https://tabelog.com/tokyo/A1329/A132901/13173764/"],"taste":{"noodle_thickness":5,"noodle_firmness":4,"soup_richness":4,"emulsification":3,"pork_size":5,"pork_tenderness":4,"volume":5,"garlic_strength":null,"vegetable_ratio":null},"confidence":"mid","summary":"低加水の極太麺はコシが強く、小でも麺250g・ヤサイ400〜600gとされる大ボリューム。豚骨に甘めの醤油を合わせたコクのあるスープで、乳化の程度は「しっかり」と「微乳化」で口コミが分かれる。豚は極厚でホロホロ。","popular_calls":[{"call":"ヤサイ・アブラ 普通/マシ","note":"この2項目を普通かマシで伝える例が多い。小でも多いので普通推奨"},{"call":"卓上ニンニクで味変","note":"刻みニンニクがカウンターにあり後から調整可能"}],"beginner_tip":"「小」でも一般的な大盛りを大きく超える量。初回は全て普通で注文を。現金のみの券売機。","review_sources":["https://retty.me/restaurant/100001177312/","https://www.timeout.jp/tokyo/ja/restaurant/jiro-insupaia-ramen"]},{"id":"butaboshi","name":"豚星。","category":"インスパイア","chain":"単独店","prefecture":"神奈川県","city":"川崎市中原区","address":"神奈川県川崎市中原区木月4-5-20 1F","station":"元住吉（東口徒歩10分）","lat":null,"lng":null,"hours":null,"closed":null,"status":"営業中","call_timing":null,"ticket_notes":null,"free_toppings":[],"local_rules":["喫煙は店外の灰皿前のみ","現金のみ","カウンター14席"],"notes":"横浜市神奈川区六角橋から移転。食べログの営業時間（11:00〜0:00通し・無休）は他情報と未照合のため保留","sources":["https://tabelog.com/kanagawa/A1405/A140504/14058333/"],"taste":{"noodle_thickness":5,"noodle_firmness":null,"soup_richness":4,"emulsification":4,"pork_size":5,"pork_tenderness":null,"volume":5,"garlic_strength":null,"vegetable_ratio":null},"confidence":"low","summary":"元住吉の有名インスパイア。極太の縮れ平打ち麺に、ほのかな甘みと濃いめの醤油が効いた乳化スープという評価。拳大とも言われる大きな焼豚が名物で、全体量がかなり多く豚を食べきれない人もいる。","popular_calls":[{"call":"そのまま（無しコール）","note":"量が多いため、増しなしで頼む例が報告されている"}],"beginner_tip":"豚が大きく全体量も多いので、初回は増しコールなしで十分。","review_sources":["https://hamoni.jp/shop/3RZQq2lVkIsHTbg9EU1B"]},{"id":"fujimaru-kamiya","name":"ラーメン富士丸 神谷本店","category":"インスパイア","chain":"富士丸","prefecture":"東京都","city":"北区","address":"東京都北区神谷3-29-11","station":"志茂（徒歩5分）／王子神谷（徒歩6分）","lat":null,"lng":null,"hours":"火〜日 18:00〜24:00（通常時）","closed":"月・第1火","status":"不明","call_timing":null,"ticket_notes":"口コミでは普通400g、麺少なめも可","free_toppings":[],"local_rules":["入店時は係員の指示に従って食券を購入","水・おしぼりはセルフ","食器はカウンター高台に上げずそのまま返却"],"notes":"旧ラーメン二郎赤羽店の流れ（旧店名ラーメン○二郎）。食べログに『ボヤで暫くの間臨時休業（2026/5/1時点）』の記載あり。再開状況未確認","sources":["https://tabelog.com/tokyo/A1323/A132305/13002910/","https://ja.wikipedia.org/wiki/ラーメン二郎"],"taste":{"noodle_thickness":5,"noodle_firmness":null,"soup_richness":4,"emulsification":null,"pork_size":5,"pork_tenderness":null,"volume":5,"garlic_strength":null,"vegetable_ratio":null},"confidence":"low","summary":"二郎出身の系譜で知られる富士丸の本店。自家製の極太麺は400gとされる爆盛りで、巨大な豚とクタクタのヤサイ、甘辛い醤油系のアブラが特徴（アブラの特徴は系列店の紹介より）。夜営業中心で行列ができやすい。","popular_calls":[{"call":"並・少なめの選択","note":"量が非常に多いため初回は並以下を選ぶ人が多い"}],"beginner_tip":"二郎直系より量が多い部類。初訪問は麺量を減らし、営業時間を事前確認すること。","review_sources":["https://hamoni.jp/shop/T6LdU0rtJYOvweue1o5f","https://www.timeout.jp/tokyo/ja/restaurant/jiro-insupaia-ramen"]},{"id":"yojinbo-jimbocho","name":"用心棒","category":"インスパイア","chain":"用心棒","prefecture":"東京都","city":"千代田区","address":"東京都千代田区神田神保町2-2-21 土田ビル1F","station":"神保町（徒歩2分）","lat":null,"lng":null,"hours":"月〜金 11:00〜15:00、17:00〜21:00／土・祝 11:00〜15:45","closed":"日","status":"営業中","call_timing":null,"ticket_notes":"口コミ写真ではラーメン1,050円、まぜそば普通300g（公式表は未確認）","free_toppings":[],"local_rules":["現金のみ","カウンター10席"],"notes":null,"sources":["https://tabelog.com/tokyo/A1310/A131003/13085246/"],"taste":{"noodle_thickness":5,"noodle_firmness":4,"soup_richness":3,"emulsification":4,"pork_size":4,"pork_tenderness":4,"volume":4,"garlic_strength":4,"vegetable_ratio":2},"confidence":"mid","summary":"神保町の人気インスパイア。コシの強い極太平打ち麺に、背脂の効いたマイルドでクリーミーな豚骨醤油スープを合わせ、家系寄りとも評される。豚は分厚く柔らかく、もやし多めのシャキシャキしたヤサイと強めのニンニクが特徴。","popular_calls":[{"call":"全マシ・ニンニクダブル","note":"一般的なコール。ニンニクは強めなのでダブルはかなり効く"},{"call":"まぜそば＋辛玉・ガリマヨ","note":"まぜそば派の定番"}],"beginner_tip":"味がマイルドで雰囲気も入りやすいとされ、インスパイア入門向き。昼は行列、夜の開店直後が比較的空いているとの報告あり。","review_sources":["https://retty.me/restaurant/100000006268/","https://www.timeout.jp/tokyo/ja/restaurant/jiro-insupaia-ramen","https://macaro-ni.jp/70446"]},{"id":"hasumi-shinmachi","name":"蓮爾 新町一丁目店","category":"インスパイア","chain":"蓮爾","prefecture":"東京都","city":"世田谷区","address":"東京都世田谷区駒沢4-29-13 ケー・テー駒沢1F","station":"駒沢大学（徒歩約8分）／桜新町（徒歩約10分）","lat":null,"lng":null,"hours":"月〜金 17:00〜23:00／土・祝 11:00〜15:00、17:00〜21:00","closed":"日","status":"営業中","call_timing":null,"ticket_notes":"極太麺。旧情報では小ラーメン370g。2026年時点でミニ・少なめ1,000円との口コミあり","free_toppings":[],"local_rules":["臨時休業・限定営業は公式Xで告知","現金のみ","L字カウンター9席"],"notes":"世田谷区上馬から移転","sources":["https://tabelog.com/tokyo/A1317/A131707/13187151/"],"taste":{"noodle_thickness":5,"noodle_firmness":null,"soup_richness":4,"emulsification":4,"pork_size":5,"pork_tenderness":5,"volume":null,"garlic_strength":null,"vegetable_ratio":null},"confidence":"low","summary":"平打ちの超極太麺と、二郎に近い濃厚な乳化系スープが特徴とされる。豚は塊肉のようなボリュームでホロホロ。情報源が少なく、詳細は追加調査が必要。","popular_calls":[],"beginner_tip":"超極太麺は食べ応えがかなり強いので、量は控えめから。","review_sources":["https://www.timeout.jp/tokyo/ja/restaurant/jiro-insupaia-ramen"]},{"id":"takanome-dokkyo","name":"ラーメン 鷹の目 獨協大学前本店","category":"インスパイア","chain":"鷹の目","prefecture":"埼玉県","city":"草加市","address":"埼玉県草加市栄町2-9-12","station":"獨協大学前（旧・松原団地、東口徒歩1分）","lat":null,"lng":null,"hours":"11:00〜15:00、17:00〜22:00","closed":"基本無休","status":"営業中","call_timing":null,"ticket_notes":null,"free_toppings":[],"local_rules":["現金のみ"],"notes":null,"sources":["https://tabelog.com/saitama/A1102/A110203/11040563/"]},{"id":"ramendai-horikiri","name":"ラーメン大 堀切店","category":"インスパイア","chain":"ラーメン大","prefecture":"東京都","city":"葛飾区","address":"東京都葛飾区堀切4-57-14","station":"堀切菖蒲園（徒歩2分）","lat":null,"lng":null,"hours":"11:30〜翌1:30","closed":null,"status":"営業中","call_timing":null,"ticket_notes":null,"free_toppings":[],"local_rules":["現金のみ"],"notes":"旧二郎系（堀切）から屋号変更した系統。堀切5-4-1から移転","sources":["https://tabelog.com/tokyo/A1324/A132403/13023113/","https://dic.nicovideo.jp/a/%E3%83%A9%E3%83%BC%E3%83%A1%E3%83%B3%E4%BA%8C%E9%83%8E"]},{"id":"junkgarage-higashiomiya","name":"ジャンクガレッジ 東大宮","category":"インスパイア","chain":"ジャンクガレッジ","prefecture":"埼玉県","city":"さいたま市見沼区","address":"埼玉県さいたま市見沼区東大宮4-47-4","station":"東大宮（西口徒歩約7分）","lat":null,"lng":null,"hours":"日〜木 11:00〜22:45／金・土 11:00〜23:45","closed":null,"status":"営業中","call_timing":null,"ticket_notes":null,"free_toppings":[],"local_rules":["駐車場12台","カード・電子マネー・QR決済可"],"notes":"まぜそばで知られる系列。品川区大崎から移転（2008年6月開店）","sources":["https://tabelog.com/saitama/A1101/A110103/11004783/"]},{"id":"kadofuji-shinmatsudo","name":"山勝 角ふじ 新松戸本店","category":"インスパイア","chain":"角ふじ","prefecture":"千葉県","city":"松戸市","address":"千葉県松戸市新松戸3丁目420-2","station":"新松戸（徒歩12分）／幸谷","lat":null,"lng":null,"hours":"11:00〜翌2:00","closed":"なし（年末年始のみ休み）","status":"営業中","call_timing":null,"ticket_notes":null,"free_toppings":["アブラ（少なめ・多め調整可）"],"local_rules":["現金のみ","駐車場4台"],"notes":null,"sources":["https://tabelog.com/chiba/A1203/A120302/12002801/"]},{"id":"doden-kitaurawa","name":"どでん","category":"インスパイア","chain":"どでん","prefecture":"埼玉県","city":"さいたま市緑区","address":"埼玉県さいたま市緑区三室1207-4","station":"北浦和（東口からバス『教育センター前』下車）","lat":null,"lng":null,"hours":"月〜金 18:00〜24:00／土日祝 11:00〜14:00、18:00〜24:00","closed":"なし（年末年始・臨時休業は告知）","status":"営業中","call_timing":null,"ticket_notes":"写真キャプションではラーメン小200g、中300g。豚増し等は有料","free_toppings":[],"local_rules":["現金のみ","カウンター12席","駐車場6台（徒歩約2分）"],"notes":null,"sources":["https://tabelog.com/saitama/A1101/A110102/11032446/"]},{"id":"riku-oyamadai","name":"陸 尾山台店","category":"インスパイア","chain":"陸","prefecture":"東京都","city":"世田谷区","address":"東京都世田谷区等々力1-30-16 ライオンズマンション等々力1F","station":"尾山台（徒歩8分）","lat":null,"lng":null,"hours":"火〜金 11:30〜14:30、18:00〜21:00／土日祝 11:30〜15:00（材料切れ次第終了）","closed":"月","status":"営業中","call_timing":"入口近くの店員に注文とともに麺のかたさ・麺量などの好みを伝える","ticket_notes":"麺量：普通270g、少なめ180g、大盛400g","free_toppings":[],"local_rules":[],"notes":"上野毛店出身の店主とされる","sources":["https://tabelog.com/tokyo/A1317/A131715/13139998/"]},{"id":"mennderu-denenchofu","name":"麺でる 田園調布本店","category":"インスパイア","chain":"麺でる","prefecture":"東京都","city":"大田区","address":"東京都大田区田園調布1-21-2","station":"雪が谷大塚（徒歩7分）","lat":null,"lng":null,"hours":"11:30〜14:00（掲載はこの時間のみ）","closed":"月","status":"営業中","call_timing":null,"ticket_notes":null,"free_toppings":[],"local_rules":[],"notes":"Retty掲載情報（2025年5月更新）。夜営業の有無は未確認","sources":["https://retty.me/restaurant/100000006203/"]},{"id":"button-chofu","name":"ぶっ豚 調布店","category":"インスパイア","chain":"ぶっ豚","prefecture":"東京都","city":"調布市","address":"東京都調布市布田1-45-6 ライオンズマンション1F","station":"調布（約115m）","lat":null,"lng":null,"hours":"11:00〜23:00（15:00〜16:00休憩）","closed":null,"status":"営業中","call_timing":null,"ticket_notes":null,"free_toppings":[],"local_rules":["現金のみ"],"notes":"2020年8月開店。系列には閉店店舗（町田店など）もあり","sources":["https://tabelog.com/en/tokyo/A1326/A132601/13249769/"]},{"id":"butaramen-warabi","name":"豚ラーメン 蕨本店","category":"インスパイア","chain":"豚ラーメン","prefecture":"埼玉県","city":"蕨市","address":"埼玉県蕨市中央1-33-8","station":"蕨（西口徒歩約1分）","lat":null,"lng":null,"hours":"月〜土 11:30〜14:00、17:15〜22:45（売り切れ次第終了）","closed":"日","status":"営業中","call_timing":null,"ticket_notes":null,"free_toppings":[],"local_rules":["現金のみ","カウンター席のみ"],"notes":null,"sources":["https://tabelog.com/en/saitama/A1102/A110202/11059881/"]},{"id":"yaro-kinshicho","name":"野郎ラーメン 錦糸町店","category":"インスパイア","chain":"野郎ラーメン","prefecture":"東京都","city":"墨田区","address":"東京都墨田区江東橋3-8-12 KINSIA ANNEX 1F","station":"錦糸町（南口徒歩約2分）","lat":null,"lng":null,"hours":"月・日 11:00〜23:00／火〜土 11:00〜翌4:00","closed":"年中無休","status":"営業中","call_timing":null,"ticket_notes":null,"free_toppings":[],"local_rules":[],"notes":"2014年5月開店。テイクアウト・デリバリーあり","sources":["https://tabelog.com/en/tokyo/A1312/A131201/13167833/"]},{"id":"yaro-akihabara","name":"野郎ラーメン 秋葉原総本店","category":"インスパイア","chain":"野郎ラーメン","prefecture":"東京都","city":"千代田区","address":"東京都千代田区外神田3-2-11","station":"秋葉原／末広町","lat":null,"lng":null,"hours":null,"closed":null,"status":"閉店","call_timing":null,"ticket_notes":null,"free_toppings":[],"local_rules":[],"notes":"設備の老朽化を理由に2025年8月24日閉店","sources":["https://trafficnews.jp/post/580424","https://ssl.tabelog.com/en/tokyo/A1310/A131001/13145362/"]},{"id":"kojiro526-daikanyama","name":"らーめん 526","category":"インスパイア","chain":"こじろう526","prefecture":"東京都","city":"渋谷区","address":"東京都渋谷区猿楽町1-3 龍王ビルIII 1F","station":"代官山（約600m）","lat":null,"lng":null,"hours":"月〜金 11:30〜15:00、17:00〜20:00／土・祝 11:30〜15:00（売り切れ次第終了）","closed":"日","status":"営業中","call_timing":null,"ticket_notes":null,"free_toppings":[],"local_rules":["現金のみ","カウンター8席"],"notes":"2011年6月開店。系列の武蔵小杉店は旧ラーメン二郎武蔵小杉店","sources":["https://tabelog.com/en/tokyo/A1303/A130301/13127293/","https://shop526.jp/"]},{"id":"momijiya-meidaimae","name":"ラーメン もみじ屋","category":"インスパイア","chain":null,"prefecture":null,"city":null,"address":null,"station":null,"lat":null,"lng":null,"hours":null,"closed":null,"status":"不明","call_timing":null,"ticket_notes":null,"free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":[],"notes":"店舗の基本情報は未収集（口コミの傾向のみ）","sources":[],"taste":{"noodle_thickness":4,"noodle_firmness":4,"soup_richness":3,"emulsification":2,"pork_size":3,"pork_tenderness":null,"volume":null,"garlic_strength":4,"vegetable_ratio":null},"confidence":"low","summary":"明大前の学生に人気の店。ゴワッとした縮れ太麺に、少し乳化した脂控えめの甘めの醤油スープを合わせる。ニンニクを効かせたパンチのある味が若者向けとされ、ミニサイズも選べる。","popular_calls":[{"call":"ニンニク","note":"ガツンとした味の要として推されている"},{"call":"ミニ豚ラーメン","note":"量を抑えたい人向けの選択肢"}],"beginner_tip":"ミニサイズがあり脂も控えめなので、二郎系の雰囲気を軽めに試せる。","review_sources":["https://www.timeout.jp/tokyo/ja/restaurant/jiro-insupaia-ramen","https://macaro-ni.jp/70446"]},{"id":"orenoikirumichi-hakusan","name":"俺の生きる道 白山店","category":"インスパイア","chain":null,"prefecture":null,"city":null,"address":null,"station":null,"lat":null,"lng":null,"hours":null,"closed":null,"status":"不明","call_timing":null,"ticket_notes":null,"free_toppings":["ヤサイ","ニンニク","アブラ","カラメ"],"local_rules":[],"notes":"店舗の基本情報は未収集（口コミの傾向のみ）","sources":[],"taste":{"noodle_thickness":3,"noodle_firmness":null,"soup_richness":2,"emulsification":1,"pork_size":5,"pork_tenderness":null,"volume":null,"garlic_strength":null,"vegetable_ratio":null},"confidence":"low","summary":"非乳化で甘めかつライトなスープにカエシが効いたタイプで、麺は食べやすい太さとされる。最大の特徴は超極太の塊豚で、豚ラーメンでは塊が追加される。ブランドとしては口コミ件数の多い二郎系チェーンの一つ。","popular_calls":[{"call":"豚ラーメン","note":"塊豚を楽しむための定番メニュー"}],"beginner_tip":"スープが軽めなので二郎系の濃さが不安な人にも向く。豚の量に注意。","review_sources":["https://www.timeout.jp/tokyo/ja/restaurant/jiro-insupaia-ramen","https://honichi.com/reports/202504_jirokeiinspire/"]}]}</script>
+<script>
+(function(){
+"use strict";
+const DATA = JSON.parse(document.getElementById('shopdata').textContent);
+const SHOPS = DATA.shops;
+const BY = Object.fromEntries(SHOPS.map(s=>[s.id,s]));
+const ICON = {yasai:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="ヤサイ">
+  
+  <path d="M3 20 C3.6 14.5 7.2 7.5 12 6.5 C16.8 7.5 20.4 14.5 21 20 Z" fill="var(--c-moyashi, #F4EFD9)"/>
+  <path d="M8 15.5 q2 -2 4 -1.2 M12.5 11.5 q2 -1.4 3.6 0" stroke-width="1.4"/>
+  
+  <path d="M6 20 c0 -3.4 3.2 -5 5.6 -3.6 c2.2 1.4 1.4 3.6 -0.6 3.6 Z" fill="var(--c-yasai, #6E9A34)"/>
+  <path d="M13.5 20 c0.4 -3 3.4 -4.2 5.4 -2.6 c1.4 1.2 0.6 2.6 -1 2.6 Z" fill="var(--c-yasai, #6E9A34)"/>
+  <path d="M2 20 H22"/>
+</svg>`, ninniku:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="ニンニク">
+  
+  <path d="M12 2.8 c0 1.6 -0.6 2.8 -1.8 3.6 C6.6 7.6 4.4 10.4 4.4 13.8 c0 4 3.4 6.8 7.6 6.8 s7.6 -2.8 7.6 -6.8 c0 -3.4 -2.2 -6.2 -5.8 -7.4 C12.6 5.6 12 4.4 12 2.8 Z" fill="var(--c-ninniku, #EFE6CC)"/>
+  
+  <path d="M12 8 c-2.2 2 -2.8 5.6 -1.6 12.4 M12 8 c2.2 2 2.8 5.6 1.6 12.4 M8 9.4 c-1.6 2.6 -1.8 6 -0.4 9.6 M16 9.4 c1.6 2.6 1.8 6 0.4 9.6" stroke-width="1.2" stroke="var(--c-ninniku-dark, #B9A774)"/>
+  
+  <rect x="18.6" y="2.6" width="2.4" height="2.4" rx=".5" fill="var(--c-ninniku, #EFE6CC)" stroke-width="1.2" transform="rotate(15 19.8 3.8)"/>
+  <rect x="20" y="6.4" width="2" height="2" rx=".5" fill="var(--c-ninniku, #EFE6CC)" stroke-width="1.2" transform="rotate(-20 21 7.4)"/>
+</svg>`, abura:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="アブラ">
+  
+  <path d="M5 13.5 c-1.6 -2.8 1 -5.6 3.8 -4.6 c0.8 -2.8 5 -3.2 6.2 -0.4 c2.8 -0.6 4.8 2.2 3.4 4.6 c1.8 1.6 0.8 4.6 -1.8 4.6 H7 c-2.8 0 -3.8 -2.8 -2 -4.2 Z" fill="var(--c-abura, #F6E7B8)"/>
+  <path d="M9 10.6 a1.3 1.3 0 0 1 1.6 -0.6 M14.6 9.6 a1.1 1.1 0 0 1 1.4 -0.2" stroke="var(--c-abura-shine, #FFFBEA)" stroke-width="1.4"/>
+  
+  <circle cx="7.5" cy="20.8" r="1.2" fill="var(--c-abura, #F6E7B8)" stroke-width="1.2"/>
+  <circle cx="12" cy="21" r="1.5" fill="var(--c-abura, #F6E7B8)" stroke-width="1.2"/>
+  <circle cx="16.5" cy="20.8" r="1.1" fill="var(--c-abura, #F6E7B8)" stroke-width="1.2"/>
+</svg>`, karame:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="カラメ">
+  
+  <path d="M12 2.6 C9.4 6.4 6.4 9.8 6.4 13.6 a5.6 5.6 0 0 0 11.2 0 C17.6 9.8 14.6 6.4 12 2.6 Z" fill="var(--c-karame, #5A240C)"/>
+  <path d="M9.4 13.4 a2.8 2.8 0 0 0 1.8 2.8" stroke="var(--c-broth-light, #D9A061)" stroke-width="1.4"/>
+  
+  <path d="M5 21.4 h14" />
+  <path d="M8.4 21.4 q3.6 -1.4 7.2 0" stroke-width="1.2" opacity=".6"/>
+</svg>`};
+const HERO = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 400" role="img" aria-labelledby="hero-title hero-desc">
+  <title id="hero-title">山盛りの一杯</title>
+  <desc id="hero-desc">ヤサイが山のように盛られ、豚、刻みニンニク、背脂がのった丼から湯気が立ちのぼるイラスト</desc>
+  <style>
+    .hero-steam path { fill: none; stroke: var(--c-steam-line, rgba(90,78,66,.35)); stroke-width: 7; stroke-linecap: round; }
+    .hero-steam path { animation: hero-rise 4.8s var(--ease-out, ease-out) infinite; transform-box: fill-box; transform-origin: 50% 100%; }
+    .hero-steam path:nth-child(2) { animation-delay: -1.6s; }
+    .hero-steam path:nth-child(3) { animation-delay: -3.2s; }
+    @keyframes hero-rise {
+      0%   { opacity: 0;   transform: translateY(14px) scaleY(.9); }
+      30%  { opacity: 1; }
+      100% { opacity: 0;   transform: translateY(-18px) scaleY(1.05); }
+    }
+    @media (prefers-reduced-motion: reduce) { .hero-steam path { animation: none; opacity: .8; } }
+    .ol { stroke: var(--c-outline, #1E1813); stroke-width: 3; stroke-linejoin: round; stroke-linecap: round; }
+  </style>
+
+  
+  <g class="hero-steam">
+    <path d="M196 58 c-14 -14 14 -24 0 -40"/>
+    <path d="M244 44 c-16 -16 16 -26 0 -40"/>
+    <path d="M292 60 c-14 -14 14 -24 0 -40"/>
+  </g>
+
+  
+  <ellipse cx="240" cy="388" rx="150" ry="9" fill="var(--c-outline, #1E1813)" opacity=".12"/>
+
+  
+  <path class="ol" d="M178 366 h124 l-10 18 h-104 z" fill="var(--c-bowl, #2B2420)"/>
+  <path class="ol" d="M48 250 C54 332 140 372 240 372 C340 372 426 332 432 250 Z" fill="var(--c-bowl, #2B2420)"/>
+  <path d="M68 292 C104 330 172 346 240 346 C308 346 376 330 412 292" fill="none" stroke="var(--c-bowl-band, #B8281A)" stroke-width="10" stroke-linecap="round"/>
+  <path d="M86 274 C120 300 178 312 240 312" fill="none" stroke="var(--c-bowl-rim, #F2EBDD)" stroke-width="4" stroke-linecap="round" opacity=".25"/>
+
+  
+  <ellipse class="ol" cx="240" cy="250" rx="192" ry="34" fill="var(--c-bowl-rim, #F2EBDD)"/>
+  <ellipse cx="240" cy="252" rx="176" ry="25" fill="var(--c-broth, #B9773A)"/>
+  <ellipse cx="200" cy="256" rx="120" ry="12" fill="var(--c-broth-light, #D9A061)" opacity=".6"/>
+  
+  <g fill="var(--c-abura-shine, #FFFBEA)" opacity=".75">
+    <circle cx="96" cy="254" r="3"/><circle cx="110" cy="262" r="2"/><circle cx="388" cy="258" r="3"/><circle cx="372" cy="264" r="2"/><circle cx="352" cy="244" r="2.5"/>
+  </g>
+
+  
+  <g fill="none" stroke="var(--c-noodle, #E2C27A)" stroke-width="8" stroke-linecap="round">
+    <path d="M78 252 c10 -10 22 4 34 -6 s20 2 28 -4"/>
+    <path d="M84 262 c12 -8 22 4 36 -4 s22 0 30 -6"/>
+  </g>
+
+  
+  <path class="ol" d="M108 250 C110 204 136 164 166 134 C188 110 210 74 240 70 C272 70 294 104 314 130 C342 164 368 204 372 250 Z" fill="var(--c-moyashi, #F4EFD9)"/>
+  <g fill="none" stroke="var(--c-moyashi-line, #CBBF96)" stroke-width="2.5" stroke-linecap="round">
+    <path d="M142 214 q14 -16 32 -10"/><path d="M168 182 q12 -14 30 -8"/><path d="M196 150 q12 -12 26 -6"/>
+    <path d="M216 118 q10 -10 22 -4"/><path d="M252 106 q12 -4 20 8"/><path d="M270 140 q14 -6 24 10"/>
+    <path d="M292 172 q14 -4 26 12"/><path d="M314 206 q14 -2 24 16"/><path d="M182 226 q16 -10 30 0"/>
+    <path d="M232 198 q12 -14 28 -8"/><path d="M262 226 q14 -10 30 -2"/><path d="M214 166 q10 -8 22 0"/>
+    <path d="M246 156 q10 -10 22 -2"/><path d="M128 238 q10 -8 20 -2"/><path d="M330 238 q10 -8 22 0"/>
+  </g>
+  
+  <g fill="var(--c-moyashi-line, #CBBF96)">
+    <circle cx="174" cy="204" r="3"/><circle cx="198" cy="174" r="3"/><circle cx="238" cy="114" r="3"/>
+    <circle cx="294" cy="150" r="3"/><circle cx="260" cy="190" r="3"/><circle cx="338" cy="222" r="3"/>
+  </g>
+
+  
+  <g class="ol" fill="var(--c-yasai, #6E9A34)">
+    <path d="M136 236 c4 -18 28 -24 42 -12 c12 10 2 26 -14 28 c-14 2 -30 -2 -28 -16z"/>
+    <path d="M206 214 c6 -16 30 -18 40 -6 c8 12 -4 24 -18 24 c-14 0 -26 -6 -22 -18z"/>
+    <path d="M296 230 c6 -16 32 -16 40 -2 c6 12 -8 22 -22 20 c-14 -2 -22 -6 -18 -18z"/>
+    <path d="M168 168 c6 -12 24 -14 30 -4 c6 10 -4 18 -14 18 c-12 0 -20 -4 -16 -14z"/>
+    <path d="M276 160 c8 -12 26 -10 30 2 c4 10 -8 16 -18 14 c-10 -2 -16 -6 -12 -16z"/>
+  </g>
+  <g fill="none" stroke="var(--c-yasai-dark, #3F6A1C)" stroke-width="2" stroke-linecap="round">
+    <path d="M144 240 q14 -6 26 -12"/><path d="M212 220 q12 -2 26 -8"/><path d="M302 236 q14 -2 26 -8"/>
+    <path d="M174 172 q10 -2 18 -6"/><path d="M282 164 q10 0 18 0"/>
+  </g>
+
+  
+  <path d="M226 78 c-4 14 -12 22 -14 36 c-1 8 6 10 9 2 c3 -10 2 -20 9 -30 c4 -6 2 -12 -4 -8z" fill="var(--c-karame, #5A240C)" opacity=".9"/>
+  <path d="M258 82 c4 12 12 18 12 30 c0 7 -6 8 -8 1 c-2 -9 -2 -18 -8 -26z" fill="var(--c-karame, #5A240C)" opacity=".8"/>
+
+  
+  <g class="ol" fill="var(--c-abura, #F6E7B8)" stroke-width="2.5">
+    <path d="M214 82 c0 -12 18 -16 24 -6 c8 -6 22 2 18 12 c8 4 4 16 -6 14 c-6 6 -18 6 -22 -2 c-10 2 -18 -10 -14 -18z"/>
+    <circle cx="200" cy="104" r="8"/><circle cx="276" cy="104" r="7"/><circle cx="252" cy="122" r="6"/>
+    <circle cx="222" cy="128" r="5"/><circle cx="188" cy="130" r="5"/>
+  </g>
+  <g fill="var(--c-abura-shine, #FFFBEA)">
+    <circle cx="226" cy="80" r="3"/><circle cx="197" cy="101" r="2.5"/><circle cx="273" cy="101" r="2"/>
+  </g>
+
+  
+  <g transform="translate(298 204) rotate(-14)">
+    <rect class="ol" x="0" y="0" width="84" height="54" rx="16" fill="var(--c-pork-fat, #F1D3BC)"/>
+    <rect x="9" y="9" width="66" height="36" rx="11" fill="var(--c-pork, #A9573A)"/>
+    <path d="M20 22 q22 -8 44 2 M22 34 q18 -6 36 0" fill="none" stroke="var(--c-pork-fat, #F1D3BC)" stroke-width="2.5" stroke-linecap="round" opacity=".7"/>
+  </g>
+  <g transform="translate(324 226) rotate(10)">
+    <rect class="ol" x="0" y="0" width="76" height="46" rx="14" fill="var(--c-pork-fat, #F1D3BC)"/>
+    <rect x="8" y="8" width="60" height="30" rx="10" fill="var(--c-pork, #A9573A)"/>
+    <path d="M18 20 q20 -6 40 2" fill="none" stroke="var(--c-pork-fat, #F1D3BC)" stroke-width="2.5" stroke-linecap="round" opacity=".7"/>
+  </g>
+
+  
+  <ellipse class="ol" cx="144" cy="254" rx="26" ry="10" fill="var(--c-ninniku, #EFE6CC)" stroke-width="2.5"/>
+  <g fill="var(--c-ninniku, #EFE6CC)" stroke="var(--c-ninniku-dark, #B9A774)" stroke-width="1.5">
+    <rect x="128" y="240" width="7" height="7" rx="1.5" transform="rotate(12 131 243)"/>
+    <rect x="138" y="236" width="7" height="7" rx="1.5" transform="rotate(-18 141 239)"/>
+    <rect x="148" y="240" width="7" height="7" rx="1.5" transform="rotate(28 151 243)"/>
+    <rect x="133" y="230" width="6" height="6" rx="1.5" transform="rotate(-6 136 233)"/>
+    <rect x="144" y="228" width="6" height="6" rx="1.5" transform="rotate(20 147 231)"/>
+    <rect x="156" y="246" width="6" height="6" rx="1.5" transform="rotate(-24 159 249)"/>
+    <rect x="122" y="248" width="6" height="6" rx="1.5" transform="rotate(8 125 251)"/>
+  </g>
+</svg>`;
+const EMPTY = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 160" role="img" aria-labelledby="empty-title">
+  <title id="empty-title">まだ何も入っていない丼</title>
+  <style>
+    .eb-ol { stroke: var(--ink-subtle, #6C5F51); stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
+  </style>
+  
+  <g fill="none" stroke="var(--line-strong, #958670)" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 7">
+    <path d="M86 46 c-8 -8 8 -14 0 -24"/>
+    <path d="M114 40 c-8 -8 8 -14 0 -24"/>
+  </g>
+  
+  <ellipse cx="100" cy="148" rx="62" ry="5" fill="var(--ink, #1E1813)" opacity=".08"/>
+  
+  <path class="eb-ol" d="M76 138 h48 l-4 8 h-40 z" fill="var(--surface-2, #F1E9DA)"/>
+  <path class="eb-ol" d="M24 84 C26 120 60 140 100 140 C140 140 174 120 176 84 Z" fill="var(--surface-2, #F1E9DA)"/>
+  <path d="M34 104 C50 122 74 128 100 128 C126 128 150 122 166 104" fill="none" stroke="var(--line-strong, #958670)" stroke-width="5" stroke-linecap="round"/>
+  <ellipse class="eb-ol" cx="100" cy="84" rx="76" ry="14" fill="var(--surface, #FFFCF6)"/>
+  <ellipse cx="100" cy="86" rx="66" ry="9" fill="var(--bg-sunken, #EDE4D3)"/>
+  
+  <g class="eb-ol" fill="var(--c-bowl-rim, #F2EBDD)" stroke-width="2">
+    <path d="M38 66 L168 80 L167 84 L37 71 Z"/>
+    <path d="M40 74 L170 86 L169 90 L39 79 Z"/>
+  </g>
+</svg>`;
+
+/* ---------- コールの定義 ---------- */
+const TOPS = [
+  {k:'yasai',  name:'ヤサイ'},
+  {k:'ninniku',name:'ニンニク'},
+  {k:'abura',  name:'アブラ'},
+  {k:'karame', name:'カラメ'}
+];
+const LV = ['なし','少なめ','普通','マシ','マシマシ'];
+// 何も言わなかった時の状態。ヤサイは普通盛り、それ以外は入らない（または標準）扱い
+const DEF = {yasai:2, ninniku:0, abura:0, karame:0};
+const SAY = {
+  yasai:  ['ヤサイヌキ','ヤサイスクナメ','','ヤサイマシ','ヤサイマシマシ'],
+  ninniku:['','ニンニクスクナメ','ニンニク','ニンニクマシ','ニンニクマシマシ'],
+  abura:  ['','アブラスクナメ','アブラ','アブラマシ','アブラマシマシ'],
+  karame: ['','カラメスクナメ','カラメ','カラメマシ','カラメマシマシ']
+};
+function callText(c){
+  const parts = TOPS.map(t=>SAY[t.k][c[t.k]]).filter(Boolean);
+  return parts.length ? parts.join('・') : 'そのままで';
+}
+
+/* ---------- 味の軸 ---------- */
+const AX = [
+  {k:'salty',  name:'しょっぱさ', color:'var(--taste-salty)'},
+  {k:'rich',   name:'こってり',   color:'var(--taste-rich)'},
+  {k:'volume', name:'量・ボリューム', color:'var(--taste-volume)'},
+  {k:'garlic', name:'ニンニク感', color:'var(--taste-noodle)'}
+];
+// 仮説の初期値：コール1段階あたりの変化（投稿が増えると実データに置き換わる）
+const PRIOR = {
+  salty:  {yasai:-0.15, ninniku:0,   abura:0.1,  karame:0.5},
+  rich:   {yasai:-0.05, ninniku:0,   abura:0.4,  karame:0.05},
+  volume: {yasai:0.45,  ninniku:0,   abura:0.1,  karame:0},
+  garlic: {yasai:0,     ninniku:0.8, abura:0,    karame:0}
+};
+const RATE_AX = [...AX, {k:'overall', name:'総合満足'}];
+
+function clamp(v,a=1,b=5){return Math.max(a,Math.min(b,v))}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function baseTaste(s){
+  const t = s && s.taste || {};
+  return {
+    salty:  t.soup_richness ?? 3,
+    rich:   t.emulsification!=null ? (t.emulsification*0.6 + (t.soup_richness??3)*0.4) : 3,
+    volume: t.volume ?? 3,
+    garlic: 1
+  };
+}
+
+/* ---------- 投稿データとモデル ---------- */
+let POSTS = [];          // 全員の投稿（db）
+let SAMPLE = true;       // 公開版は共有の記録がないので、最初からサンプル表示
+let SAMPLE_POSTS = null, SAMPLE_MODEL = null;
+const LS_KEY = 'donyomi.myEntries.v1';
+let myEntries = loadLocal();
+function loadLocal(){ try{ const v=JSON.parse(localStorage.getItem(LS_KEY)||'[]'); return Array.isArray(v)?v.filter(e=>e&&e.calls&&e.ratings&&e.shop):[]; }catch(e){ return []; } }
+function saveLocal(list){ try{ localStorage.setItem(LS_KEY, JSON.stringify(list)); return true; }catch(e){ return false; } }
+
+function samplePosts(){
+  // 統計画面の見本用。保存はしない。決まった乱数で毎回同じ結果になる
+  let seed = 7; const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647};
+  const pool = SHOPS.filter(s=>s.taste && s.status!=='閉店');
+  const out=[];
+  for(let i=0;i<160;i++){
+    const s = pool[Math.floor(rnd()*pool.length)];
+    const c = {yasai:Math.floor(rnd()*5), ninniku:Math.floor(rnd()*5), abura:Math.floor(rnd()*4), karame:Math.floor(rnd()*4)};
+    const b = baseTaste(s); const r={};
+    AX.forEach(a=>{ let v=b[a.k]; TOPS.forEach(t=>v+=PRIOR[a.k][t.k]*(c[t.k]-DEF[t.k])*1.1); r[a.k]=Math.round(clamp(v+(rnd()-.5)*1.4)); });
+    r.overall = Math.round(clamp(3.4 + (c.karame>=3?-.6:0) + (c.yasai>=4?-.4:0) + (c.ninniku>=2?.4:0) + (rnd()-.5)*1.6));
+    out.push({shop:s.id, calls:c, ratings:r, finished: r.volume<=4 || rnd()>.5});
+  }
+  return out;
+}
+function activePosts(){ return SAMPLE ? (SAMPLE_POSTS ||= samplePosts()) : POSTS; }
+
+function solve(A,b){ // ガウスの消去法
+  const n=b.length; const M=A.map((r,i)=>[...r,b[i]]);
+  for(let i=0;i<n;i++){
+    let p=i; for(let r=i+1;r<n;r++) if(Math.abs(M[r][i])>Math.abs(M[p][i])) p=r;
+    [M[i],M[p]]=[M[p],M[i]];
+    if(Math.abs(M[i][i])<1e-9) return null;
+    for(let r=0;r<n;r++){ if(r===i) continue; const f=M[r][i]/M[i][i]; for(let c=i;c<=n;c++) M[r][c]-=f*M[i][c]; }
+  }
+  return M.map((r,i)=>r[n]/r[i]);
+}
+const LAMBDA = 15; // 初期値への引き寄せの強さ（投稿約15件分）
+function fitModel(posts){
+  const model={};
+  AX.forEach(a=>{
+    const rows = posts.filter(p=>p.ratings && p.ratings[a.k]!=null && BY[p.shop]);
+    // 説明変数: 切片 + 4トッピング（標準からの段数）。目的変数: 評価 − 口コミベース
+    const k=5; const A=Array.from({length:k},()=>Array(k).fill(0)); const y=Array(k).fill(0);
+    rows.forEach(p=>{
+      const x=[1,...TOPS.map(t=>p.calls[t.k]-DEF[t.k])];
+      const t = p.ratings[a.k]-baseTaste(BY[p.shop])[a.k];
+      for(let i=0;i<k;i++){ y[i]+=x[i]*t; for(let j=0;j<k;j++) A[i][j]+=x[i]*x[j]; }
+    });
+    const prior=[0,...TOPS.map(t=>PRIOR[a.k][t.k])];
+    for(let i=0;i<k;i++){ const l = i===0?5:LAMBDA; A[i][i]+=l; y[i]+=l*prior[i]; }
+    const b = solve(A,y) || prior;
+    // 店ごとのずれ（件数が少ないほど0に寄せる）
+    const shopAdj={}; const acc={};
+    rows.forEach(p=>{
+      const x=TOPS.map(t=>p.calls[t.k]-DEF[t.k]);
+      const pred = baseTaste(BY[p.shop])[a.k]+b[0]+x.reduce((s,v,i)=>s+v*b[i+1],0);
+      (acc[p.shop] ||= {s:0,n:0}); acc[p.shop].s += p.ratings[a.k]-pred; acc[p.shop].n++;
+    });
+    Object.entries(acc).forEach(([id,o])=>shopAdj[id]={adj:o.s/(o.n+5), n:o.n});
+    model[a.k]={b, shopAdj, n:rows.length};
+  });
+  return model;
+}
+POSTS = myEntries.filter(e=>BY[e.shop]);
+let MODEL = fitModel(POSTS);
+function predict(shop, calls){
+  const base = baseTaste(shop); const out={};
+  AX.forEach(a=>{
+    const m=MODEL[a.k]; const adj = (m.shopAdj[shop?.id]||{adj:0}).adj;
+    let v = base[a.k] + m.b[0] + adj;
+    TOPS.forEach((t,i)=>v += m.b[i+1]*(calls[t.k]-DEF[t.k]));
+    out[a.k]=clamp(v);
+  });
+  out.base = base;
+  out.n = (MODEL.salty.shopAdj[shop?.id]||{n:0}).n;
+  out.total = MODEL.salty.n;
+  return out;
+}
+function pearson(xs,ys){
+  const n=xs.length; if(n<3) return null;
+  const mx=xs.reduce((a,b)=>a+b)/n, my=ys.reduce((a,b)=>a+b)/n;
+  let sxy=0,sx=0,sy=0; for(let i=0;i<n;i++){const dx=xs[i]-mx,dy=ys[i]-my;sxy+=dx*dy;sx+=dx*dx;sy+=dy*dy}
+  if(sx===0||sy===0) return null; return sxy/Math.sqrt(sx*sy);
+}
+
+/* ---------- 部品 ---------- */
+function chipCat(s){ return s.category==='直系' ? '<span class="chip chip-direct">直系</span>' : '<span class="chip chip-inspire">インスパイア</span>'; }
+function chipConf(s){ if(!s.confidence) return '<span class="chip chip-low">口コミ未集計</span>'; const m={high:['chip-high','情報 多'],mid:['chip-mid','情報 中'],low:['chip-low','情報 少']}[s.confidence]; return `<span class="chip ${m[0]}">${m[1]}</span>`; }
+function chipStatus(s){ return s.status==='閉店' ? '<span class="chip chip-closed">閉店</span>' : s.status==='不明' ? '<span class="chip chip-low">営業状況不明</span>' : ''; }
+function shortName(s){ return s.name.replace(/^ラーメン二郎\s*/,''); }
+function dots(v){ if(v==null) return '<span class="xs">—</span>'; return '<span class="dots">'+[1,2,3,4,5].map(i=>`<i class="${i<=v?'on':''}"></i>`).join('')+'</span>'; }
+function bar(name,v,color,base,suffix){
+  if(v==null) return `<div class="bar na"><span>${name}</span><div class="track"></div><span class="v">不明</span></div>`;
+  const w=(v-1)/4*100; const bm = base!=null?`<span class="base" style="left:calc(${(base-1)/4*100}% - 1px)" title="標準"></span>`:'';
+  return `<div class="bar"><span>${name}</span><div class="track"><span class="fill" style="width:${Math.max(4,w)}%;background:${color}"></span>${bm}</div><span class="v">${v.toFixed(1)}${suffix||''}</span></div>`;
+}
+function segLevels(name, key, val, kind){
+  const labels = kind==='rate' ? ['1','2','3','4','5'] : LV;
+  return `<div class="seg ${kind==='rate'?'rate':''}" role="group" aria-label="${esc(name)}" data-key="${key}">`+
+    labels.map((l,i)=>`<button type="button" data-l="${i}" aria-pressed="${val===i}">${l}</button>`).join('')+'</div>';
+}
+function callRows(calls, prefix){
+  return TOPS.map(t=>`<div class="lvl"><span class="lvl-name t-${t.k}">${ICON[t.k]}${t.name}</span>${segLevels(t.name, prefix+t.k, calls[t.k])}</div>`).join('');
+}
+function bindSeg(root, onChange){
+  root.querySelectorAll('.seg').forEach(g=>g.addEventListener('click',e=>{
+    const b=e.target.closest('button'); if(!b) return;
+    g.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed', String(x===b)));
+    onChange(g.dataset.key, +b.dataset.l);
+  }));
+}
+function predBars(p){
+  return '<div class="bars">'+AX.map(a=>bar(a.name,p[a.k],a.color,a.k==='garlic'?null:p.base[a.k])).join('')+'</div>'+
+    `<p class="xs">黒い線は「そのままで」頼んだ時の目安。${p.total? `投稿${p.total}件（この店${p.n}件）を反映。`:'まだ投稿がないため、口コミの傾向と仮の係数で予測しています。'}</p>`;
+}
+function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.hidden=false; clearTimeout(toast.t); toast.t=setTimeout(()=>t.hidden=true,2200); }
+function copy(text){
+  const done=()=>toast('コピーしました');
+  try{ navigator.clipboard.writeText(text).then(done,()=>toast('コピーできませんでした。長押しで選択してください')); }catch(e){ toast('コピーできませんでした'); }
+}
+function shopOptions(sel, includeAll){
+  const open = SHOPS.filter(s=>s.status!=='閉店');
+  const grp = (cat)=>open.filter(s=>s.category===cat).map(s=>`<option value="${s.id}" ${s.id===sel?'selected':''}>${esc(s.name)}</option>`).join('');
+  return (includeAll?`<option value="">店を決めていない</option>`:'<option value="">店を選ぶ</option>')+
+    `<optgroup label="直系">${grp('直系')}</optgroup><optgroup label="インスパイア">${grp('インスパイア')}</optgroup>`;
+}
+
+/* ---------- 画面：一発コール ---------- */
+const QS = [
+  {k:'hunger', q:'お腹の空き具合は？', a:['ふつう','かなり空いてる','食べきれるか不安']},
+  {k:'salt',   q:'しょっぱい味は？',   a:['苦手','ふつう','好き']},
+  {k:'garlic', q:'ニンニクは？',       a:['この後人に会う','平気','大好き']},
+  {k:'fat',    q:'脂っこいのは？',     a:['控えめがいい','ふつう','好き']}
+];
+let quiz = {hunger:0, salt:1, garlic:1, fat:1, shop:''};
+function quizCall(){
+  const s = BY[quiz.shop]; const vol = s?.taste?.volume ?? 3; const salty = s?.taste?.soup_richness ?? 3;
+  const c = {...DEF};
+  c.yasai = quiz.hunger===1 ? 3 : 2;
+  if(quiz.hunger===2 || vol>=4) c.yasai = Math.min(c.yasai,2);
+  c.ninniku = [0,2,3][quiz.garlic];
+  c.abura = [0,0,2][quiz.fat];
+  c.karame = (quiz.salt===2 && salty<=3) ? 2 : 0;
+  const tips=[];
+  tips.push(quiz.hunger===1 && vol<4 ? '食券は「小ラーメン」で十分です。大は相当な量があります。' : '食券は「小ラーメン」。');
+  if(quiz.hunger===2 || vol>=4) tips.push(`麺の量は、食券を出す時や聞かれた時に「麺少なめ」または「半分」と伝えると安心です${vol>=4?'（この店は量が多めという評判です）':''}。`);
+  if(quiz.salt===0 && salty>=4) tips.push('この店はスープが濃いめという評判です。カラメは付けないのがおすすめです。');
+  if(quiz.salt===2 && salty>=4) tips.push('この店はもともと濃いめなので、カラメは2回目以降に試すのがおすすめです。');
+  if(quiz.garlic===0) tips.push('ニンニクを入れない時は「そのままで」でも通じます。');
+  return {c, tips};
+}
+function shareUrl(c){
+  const page = location.href.split('#')[0];
+  return 'https://twitter.com/intent/tweet?text='+encodeURIComponent('私の一発コールは『'+callText(c)+'』でした')
+    +'&url='+encodeURIComponent(page)+'&hashtags='+encodeURIComponent('二郎系,今日の一発コール');
+}
+function viewHome(){
+  const {c,tips} = quizCall(); const s=BY[quiz.shop];
+  const timing = s?.call_timing ? s.call_timing.replace(/^（直系共通の一般的な流れ）/,'') : '多くの店では、ラーメンが出てくる直前に「ニンニク入れますか？」と聞かれます。その時に、下のコールをそのまま言えばOKです。';
+  return `
+  <section class="hero">
+    <div class="stack">
+      <span class="label">二郎系ラーメンのコールと味の記録</span>
+      <h1>初めてでも、<br><em>一発で</em>コール。</h1>
+      <p class="lead">4つの質問に答えるだけで、言うべきコールが決まります。みんなが記録したコールと味の関係から、その一杯の味も予測します。</p>
+    </div>
+    <div class="hero-art">${HERO}</div>
+  </section>
+  <section class="ticket stack" aria-labelledby="qtitle">
+    <h2 id="qtitle">一発コール診断</h2>
+    <div class="field q"><label class="label" for="q-shop">行く店（任意）</label><select id="q-shop">${shopOptions(quiz.shop,true)}</select></div>
+    ${QS.map(q=>`<div class="q"><span class="label">${q.q}</span><div class="choices" data-q="${q.k}">${q.a.map((a,i)=>`<button type="button" aria-pressed="${quiz[q.k]===i}" data-i="${i}">${a}</button>`).join('')}</div></div>`).join('')}
+    <hr class="perf">
+    <div class="callout">
+      <span class="xs">店員さんに聞かれたら、こう言う</span>
+      <span class="say" id="say">${callText(c)}</span>
+      <div class="row"><button class="btn btn-accent" type="button" id="copy-call">コールをコピー</button>
+      <a class="btn btn-ghost" href="#post" id="to-post">食べたら記録する</a>
+      <a class="btn btn-ghost" id="share-x" href="${esc(shareUrl(c))}" target="_blank" rel="noopener">Xでシェア</a></div>
+    </div>
+    <div class="two">
+      <div class="stack-s">
+        <span class="label">言うタイミング</span><p class="small">${esc(timing)}</p>
+        <ul class="small" style="margin:0;padding-left:1.2em">${tips.map(t=>`<li>${esc(t)}</li>`).join('')}</ul>
+      </div>
+      <div class="stack-s"><span class="label">この一杯の予想${s?'（'+esc(shortName(s))+'）':'（標準的な店）'}</span>${predBars(predict(s,c))}</div>
+    </div>
+  </section>
+  <section class="stack">
+    <h2>これから入れる機能</h2>
+    <div class="road">
+      ${[['アカウントと常連バッジ','記録の数や信頼度で常連レベルを表示。玄人の意見だけを絞り込んで読めるようにします。'],
+         ['有名人の来店記録','本人や店の公式アカウントが公開した情報だけを、出典付きで載せます。'],
+         ['マイ二郎ログ','訪問記録と直系の制覇マップ、自分のコール傾向。'],
+         ['アプリ版','ホーム画面に置けるアプリにして、店先でもオフラインでガイドが見られるようにします。']]
+        .map(r=>`<div class="panel"><h3>${r[0]}</h3><p class="small muted">${r[1]}</p></div>`).join('')}
+    </div>
+  </section>`;
+}
+function bindHome(root){
+  root.querySelectorAll('.choices').forEach(g=>g.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;quiz[g.dataset.q]=+b.dataset.i;render();}));
+  root.querySelector('#q-shop').addEventListener('change',e=>{quiz.shop=e.target.value;render();});
+  root.querySelector('#copy-call').addEventListener('click',()=>copy(document.getElementById('say').textContent));
+  root.querySelector('#to-post').addEventListener('click',()=>{ const {c}=quizCall(); form.calls={...c}; if(quiz.shop) form.shop=quiz.shop; });
+}
+
+/* ---------- 画面：店を探す ---------- */
+let filt = {q:'', cat:'', pref:'', open:true, sort:'default'};
+function viewShops(){
+  const prefs=[...new Set(SHOPS.map(s=>s.prefecture).filter(Boolean))];
+  let list = SHOPS.filter(s=>(!filt.open||s.status!=='閉店')&&(!filt.cat||s.category===filt.cat)&&(!filt.pref||s.prefecture===filt.pref)
+    &&(!filt.q||(s.name+(s.station||'')+(s.city||'')+(s.address||'')).includes(filt.q)));
+  if(filt.sort==='light') list=[...list].sort((a,b)=>((a.taste?.volume??9)-(b.taste?.volume??9)));
+  if(filt.sort==='rich') list=[...list].sort((a,b)=>((b.taste?.emulsification??-1)-(a.taste?.emulsification??-1)));
+  const cnt = c=>SHOPS.filter(s=>s.category===c&&s.status!=='閉店').length;
+  return `
+  <section class="stack">
+    <div class="stack-s"><h1>店を探す</h1><p class="muted">営業中の直系${cnt('直系')}店とインスパイア${cnt('インスパイア')}店。閉店した店も切り替えで見られます。</p></div>
+    <div class="filters">
+      <input class="search" id="f-q" type="search" placeholder="店名・駅名で探す" value="${esc(filt.q)}" aria-label="店名・駅名で探す">
+      <select id="f-cat" aria-label="区分"><option value="">直系とインスパイア</option><option ${filt.cat==='直系'?'selected':''}>直系</option><option ${filt.cat==='インスパイア'?'selected':''}>インスパイア</option></select>
+      <select id="f-pref" aria-label="都道府県"><option value="">全国</option>${prefs.map(p=>`<option ${filt.pref===p?'selected':''}>${p}</option>`).join('')}</select>
+    </div>
+    <div class="row">
+      <label class="toggle"><input type="checkbox" id="f-open" ${filt.open?'checked':''}>営業中のみ</label>
+      <label class="small muted" for="f-sort">並び順</label>
+      <select id="f-sort" class="btn-ghost" style="min-height:40px;border-radius:var(--r-sm);padding:0 10px"><option value="default">標準</option><option value="light" ${filt.sort==='light'?'selected':''}>量が少なめ順（初心者向け）</option><option value="rich" ${filt.sort==='rich'?'selected':''}>乳化が強い順</option></select>
+      <span class="small muted num" style="margin-left:auto">${list.length}件</span>
+    </div>
+    ${list.length? `<div class="grid">${list.map(s=>`
+      <a class="ticket shop" href="#s-${s.id}">
+        <div class="row" style="gap:6px">${chipCat(s)}${chipStatus(s)}${chipConf(s)}</div>
+        <h3>${esc(s.name)}</h3>
+        <p class="xs">${esc([s.prefecture,s.station].filter(Boolean).join('・')||'所在地 未確認')}</p>
+        <div class="mini">
+          <div><span class="xs">乳化</span>${dots(s.taste?.emulsification)}</div>
+          <div><span class="xs">濃さ</span>${dots(s.taste?.soup_richness)}</div>
+          <div><span class="xs">量</span>${dots(s.taste?.volume)}</div>
+        </div>
+      </a>`).join('')}</div>` : `<div class="empty">${EMPTY}<p>条件に合う店がありません。</p></div>`}
+  </section>`;
+}
+function bindShops(root){
+  const q=root.querySelector('#f-q');
+  q.addEventListener('input',e=>{filt.q=e.target.value; const pos=e.target.selectionStart; render(); const n=document.getElementById('f-q'); n.focus(); try{n.setSelectionRange(pos,pos)}catch(_){}});
+  root.querySelector('#f-cat').addEventListener('change',e=>{filt.cat=e.target.value;render();});
+  root.querySelector('#f-pref').addEventListener('change',e=>{filt.pref=e.target.value;render();});
+  root.querySelector('#f-open').addEventListener('change',e=>{filt.open=e.target.checked;render();});
+  root.querySelector('#f-sort').addEventListener('change',e=>{filt.sort=e.target.value;render();});
+}
+
+/* ---------- 画面：店の詳細 ---------- */
+let detCalls = {...DEF, ninniku:2};
+function viewShop(id){
+  const s=BY[id]; if(!s) return `<div class="empty">${EMPTY}<p>店が見つかりません。</p><a class="btn btn-ghost" href="#shops">店一覧へ</a></div>`;
+  const t=s.taste||{};
+  const P = activePosts().filter(p=>p.shop===id);
+  const combos={}; P.forEach(p=>{const k=callText(p.calls); (combos[k] ||= {n:0,o:0}); combos[k].n++; combos[k].o+=p.ratings.overall||0;});
+  const top = Object.entries(combos).sort((a,b)=>b[1].n-a[1].n).slice(0,5);
+  const timing = (s.call_timing||'').replace(/^（直系共通の一般的な流れ）/,'');
+  const generic = (s.call_timing||'').startsWith('（直系共通');
+  const flow = [
+    '店の外に並ぶ。店によっては先に食券を買ってから並びます。',
+    s.ticket_notes ? s.ticket_notes : '食券を買い、席に着いたらカウンターの上に置きます。',
+    timing || 'ラーメンが出てくる直前に「ニンニク入れますか？」と聞かれたら、コールを伝えます。',
+    '食べ終わったら丼をカウンターの上に上げ、テーブルを拭いてすぐ席を立ちます。'
+  ];
+  const mapQ = encodeURIComponent(s.address || s.name);
+  return `
+  <section class="stack">
+    <a href="#shops" class="small">← 店一覧</a>
+    <div class="stack-s">
+      <div class="row" style="gap:6px">${chipCat(s)}${chipStatus(s)}${chipConf(s)}</div>
+      <h1>${esc(s.name)}</h1>
+      ${s.summary?`<p class="lead">${esc(s.summary)}</p>`:'<p class="muted">口コミの傾向はまだ集計していません。記録が集まると、ここに味の傾向が出ます。</p>'}
+    </div>
+  </section>
+  <section class="detail">
+    <div class="stack">
+      <div class="ticket stack">
+        <h2>このコールだと、どんな味？</h2>
+        ${callRows(detCalls,'d-')}
+        <div class="callout"><span class="xs">言うコール</span><span class="say" id="dsay">${callText(detCalls)}</span>
+          <div class="row"><button class="btn btn-accent" type="button" id="dcopy">コピー</button><a class="btn btn-ghost" href="#post" id="dpost">この内容で記録する</a></div></div>
+        <div id="dpred">${predBars(predict(s,detCalls))}</div>
+      </div>
+      <div class="panel stack-s">
+        <h2>味の傾向（口コミより）</h2>
+        <div class="bars">
+          ${bar('麺の太さ',t.noodle_thickness,'var(--taste-noodle)')}
+          ${bar('麺の硬さ',t.noodle_firmness,'var(--taste-noodle)')}
+          ${bar('スープの濃さ',t.soup_richness,'var(--taste-salty)')}
+          ${bar('乳化度',t.emulsification,'var(--taste-rich)')}
+          ${bar('豚の大きさ',t.pork_size,'var(--taste-pork)')}
+          ${bar('豚の柔らかさ',t.pork_tenderness,'var(--taste-pork)')}
+          ${bar('量',t.volume,'var(--taste-volume)')}
+          ${bar('キャベツ比率',t.vegetable_ratio,'var(--taste-volume)')}
+        </div>
+        <p class="xs">1〜5の相対評価（二郎系の中での位置）。乳化度は1が非乳化、5がド乳化。「不明」は根拠となる情報がなかった項目です。</p>
+      </div>
+    </div>
+    <div class="stack">
+      <div class="panel stack-s">
+        <h2>店の流れとルール</h2>
+        <ol class="flow">${flow.map(f=>`<li><span>${esc(f)}</span></li>`).join('')}</ol>
+        ${generic?'<p class="xs">コールの流れは直系で一般的なものです。この店で個別に確認したものではありません。</p>':''}
+        ${(s.local_rules||[]).length?`<div class="stack-s"><span class="label">この店の注意</span><ul class="small" style="margin:0;padding-left:1.2em">${s.local_rules.map(r=>`<li>${esc(r)}</li>`).join('')}</ul></div>`:''}
+        ${(s.free_toppings||[]).length?`<div class="row" style="gap:6px"><span class="label">無料トッピング</span>${s.free_toppings.map(f=>`<span class="chip">${esc(f)}</span>`).join('')}</div>`:''}
+        ${s.beginner_tip?`<div class="note"><strong>初心者へ：</strong>${esc(s.beginner_tip)}</div>`:''}
+      </div>
+      ${(s.popular_calls||[]).length?`<div class="panel stack-s"><h2>よく見かけるコール</h2><ul class="small" style="margin:0;padding-left:1.2em">${s.popular_calls.map(p=>`<li><strong>${esc(p.call)}</strong>　<span class="muted">${esc(p.note||'')}</span></li>`).join('')}</ul></div>`:''}
+      <div class="panel stack-s">
+        <h2>${SAMPLE?'みんなの記録（架空のサンプル）':'記録（この端末に保存した分）'}</h2>
+        ${P.length? `<p class="small muted num">${P.length}件の記録。多かったコール：</p><table class="rank"><thead><tr><th>コール</th><th>件数</th><th>満足</th></tr></thead><tbody>${top.map(([k,v])=>`<tr><td>${esc(k)}</td><td class="n">${v.n}</td><td class="n">${(v.o/v.n).toFixed(1)}</td></tr>`).join('')}</tbody></table>`
+          : `<p class="small muted">この店の記録はまだありません。最初の1件を記録すると、予測にこの店のクセが反映されます。</p>`}
+      </div>
+      <div class="panel stack-s">
+        <h2>店の情報</h2>
+        <dl class="info">
+          <dt>住所</dt><dd>${esc(s.address||'未確認')}</dd>
+          <dt>最寄駅</dt><dd>${esc(s.station||'未確認')}</dd>
+          <dt>営業時間</dt><dd>${esc(s.hours||'未確認')}</dd>
+          <dt>定休日</dt><dd>${esc(s.closed||'未確認')}</dd>
+        </dl>
+        ${s.notes?`<p class="xs">${esc(s.notes)}</p>`:''}
+        <p class="xs">${s.checked_at?`営業情報の最終確認：${esc(s.checked_at)}。`:''}臨時休業や時間変更が多いので、来店前に店の公式Xを確認してください。</p>
+        <div class="row"><a class="btn btn-ghost" href="https://www.google.com/maps/search/?api=1&query=${mapQ}" target="_blank" rel="noopener">地図で開く</a></div>
+        <details><summary>情報源</summary><ol class="srcs">${[...(s.sources||[]),...(s.review_sources||[])].filter((v,i,a)=>a.indexOf(v)===i).map(u=>`<li><a href="${esc(u)}" target="_blank" rel="noopener">${esc(decodeURI(u))}</a></li>`).join('')}</ol></details>
+      </div>
+    </div>
+  </section>`;
+}
+function bindShop(root,id){
+  const s=BY[id]; if(!s) return;
+  bindSeg(root,(key,l)=>{ detCalls[key.slice(2)]=l; root.querySelector('#dsay').textContent=callText(detCalls); root.querySelector('#dpred').innerHTML=predBars(predict(s,detCalls)); });
+  root.querySelector('#dcopy').addEventListener('click',()=>copy(callText(detCalls)));
+  root.querySelector('#dpost').addEventListener('click',()=>{form.calls={...detCalls}; form.shop=id;});
+}
+
+/* ---------- 画面：記録する ---------- */
+let form = {shop:'', size:'小', men:'普通', calls:{...DEF}, ratings:{salty:3,rich:3,volume:3,garlic:1,overall:3}, finished:true, memo:''};
+function viewPost(){
+  const s = BY[form.shop];
+  const status = '<div class="banner">入力と予測はそのまま試せます。みんなの記録への投稿は、いまはClaude版（要ログイン）で受け付けています。</div>';
+  return `
+  <section class="stack">
+    <div class="stack-s"><h1>一杯を記録する</h1><p class="muted">頼んだコールと、実際の味を5段階で残します。記録が集まるほど、コールから味を当てる精度が上がります。</p></div>
+    ${status}
+    <form class="two" id="pf" novalidate>
+      <div class="ticket stack">
+        <div class="field stack-s"><label class="label" for="p-shop">店</label><select id="p-shop" required>${shopOptions(form.shop,false)}</select></div>
+        <div class="row">
+          <div class="field stack-s" style="flex:1;min-width:120px"><label class="label" for="p-size">食券</label><select id="p-size">${['小','小豚','大','大豚','その他'].map(v=>`<option ${form.size===v?'selected':''}>${v}</option>`).join('')}</select></div>
+          <div class="field stack-s" style="flex:1;min-width:120px"><label class="label" for="p-men">麺の量</label><select id="p-men">${['半分','少なめ','普通','多め'].map(v=>`<option ${form.men===v?'selected':''}>${v}</option>`).join('')}</select></div>
+        </div>
+        <span class="label">コール</span>
+        ${callRows(form.calls,'c-')}
+        <div class="callout"><span class="xs">あなたのコール</span><span class="say" id="psay">${callText(form.calls)}</span></div>
+      </div>
+      <div class="ticket stack">
+        <span class="label">実際の味（1〜5）</span>
+        ${RATE_AX.map(a=>`<div class="lvl"><span class="lvl-name small">${a.name}</span>${segLevels(a.name,'r-'+a.k,form.ratings[a.k]-1,'rate')}</div>`).join('')}
+        <p class="xs">しょっぱさ・こってり・量・ニンニク感は「1=弱い／少ない、5=強い／多い」。総合満足は「5=最高」。</p>
+        <label class="toggle"><input type="checkbox" id="p-fin" ${form.finished?'checked':''}>完食した</label>
+        <div class="field stack-s"><label class="label" for="p-memo">ひとこと（任意・100字まで）</label><textarea id="p-memo" maxlength="100" placeholder="例：カラメにしたらかなりしょっぱかった">${esc(form.memo)}</textarea></div>
+        <p class="xs">お店の関係者の方、招待などで無料で食べた方の記録はご遠慮ください。</p>
+        <div class="note stack-s"><p style="margin:0"><strong>記録の保存は準備中です。</strong>いまはClaude版（要ログイン）で受け付けています。</p>
+          <div class="row"><a class="btn btn-accent" href="https://claude.ai/artifact/U9YCBJVvpktteS8JE8rvTq" target="_blank" rel="noopener">Claude版で記録する</a></div></div>
+        <div class="save-box stack-s">
+          <button class="btn btn-ghost" type="submit" id="p-submit">この端末にメモとして保存</button>
+          <p class="xs" style="margin:0">この端末のブラウザにだけ保存されます。ほかの人には共有されず、ブラウザのデータを消すと消えます。</p>
+          <p class="small" id="p-msg" role="status"></p>
+        </div>
+        ${s?`<div class="stack-s"><span class="label">記録前の予想（${esc(shortName(s))}）</span><div id="ppred">${predBars(predict(s,form.calls))}</div></div>`:'<div id="ppred"></div>'}
+      </div>
+    </form>
+    <section class="stack-s">
+      <h2>あなたの記録（この端末にだけ保存）</h2>
+      ${myEntries.length? `<div class="tbl"><table class="rank"><thead><tr><th>日付</th><th>店</th><th>コール</th><th>満足</th><th></th></tr></thead><tbody>${[...myEntries].reverse().map(e=>`<tr><td class="num">${esc((e.at||'').slice(5,10).replace('-','/'))}</td><td>${esc(shortName(BY[e.shop]||{name:e.shop}))}</td><td>${esc(callText(e.calls))}</td><td class="n">${e.ratings.overall}</td><td><button class="btn btn-ghost" style="min-height:34px;padding:0 10px;font-size:var(--fs-xs)" data-del="${esc(e.id)}" type="button">削除</button></td></tr>`).join('')}</tbody></table></div>`
+        : `<div class="empty">${EMPTY}<p class="muted small">まだ記録がありません。上の「この端末にメモとして保存」で、自分用に残せます。</p></div>`}
+    </section>
+  </section>`;
+}
+function bindPost(root){
+  const upd=()=>{ root.querySelector('#psay').textContent=callText(form.calls); const s=BY[form.shop]; const pp=root.querySelector('#ppred'); if(s&&pp) pp.innerHTML=predBars(predict(s,form.calls)); };
+  bindSeg(root,(key,l)=>{ if(key.startsWith('c-')){form.calls[key.slice(2)]=l;upd();} else form.ratings[key.slice(2)]=l+1; });
+  root.querySelector('#p-shop').addEventListener('change',e=>{form.shop=e.target.value;render();});
+  root.querySelector('#p-size').addEventListener('change',e=>form.size=e.target.value);
+  root.querySelector('#p-men').addEventListener('change',e=>form.men=e.target.value);
+  root.querySelector('#p-fin').addEventListener('change',e=>form.finished=e.target.checked);
+  root.querySelector('#p-memo').addEventListener('input',e=>form.memo=e.target.value);
+  root.querySelector('#pf').addEventListener('submit',e=>{
+    e.preventDefault(); const msg=root.querySelector('#p-msg');
+    if(!form.shop){ msg.textContent='店を選んでください。'; return; }
+    const entry={id:Date.now().toString(36)+Math.random().toString(36).slice(2,6), shop:form.shop, size:form.size, men:form.men, calls:{...form.calls}, ratings:{...form.ratings}, finished:form.finished, memo:form.memo.slice(0,100), at:new Date().toISOString()};
+    const next=[...myEntries, entry].slice(-300);
+    if(!saveLocal(next)){ msg.textContent='このブラウザでは保存できませんでした（プライベートモードや保存の制限が原因のことがあります）。'; return; }
+    myEntries=next; syncLocal(); form.memo=''; toast('この端末に保存しました'); render();
+  });
+  root.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',()=>{
+    if(b.dataset.confirm!=='1'){ b.dataset.confirm='1'; b.textContent='本当に削除'; return; }
+    const next=myEntries.filter(e=>e.id!==b.dataset.del);
+    if(!saveLocal(next)){ toast('削除できませんでした'); return; }
+    myEntries=next; syncLocal(); toast('削除しました'); render();
+  }));
+}
+
+/* ---------- 画面：コール統計 ---------- */
+let statShop='';
+function viewStats(){
+  const all=activePosts(); const P = statShop? all.filter(p=>p.shop===statShop) : all;
+  const enough = P.length>=5;
+  const corr = TOPS.map(t=>RATE_AX.concat([{k:'finished',name:'完食'}]).map(a=>{
+    const xs=[],ys=[]; P.forEach(p=>{ const y = a.k==='finished' ? (p.finished?1:0) : p.ratings?.[a.k]; if(y!=null){xs.push(p.calls[t.k]);ys.push(y);} });
+    return pearson(xs,ys);
+  }));
+  const cols = RATE_AX.concat([{k:'finished',name:'完食'}]);
+  const cell = r=>{
+    if(r==null) return '<td style="background:var(--surface-2);color:var(--ink-subtle)">—</td>';
+    const a=Math.min(1,Math.abs(r)); const c = r>=0 ? 'var(--accent)' : 'var(--info)';
+    const strong = a>0.45;
+    return `<td style="background:color-mix(in srgb, ${c} ${Math.round(a*85)}%, var(--surface-2));color:${strong?'var(--on-accent)':'var(--ink)'}">${r>=0?'+':''}${r.toFixed(2)}</td>`;
+  };
+  const combos={}; P.forEach(p=>{const k=callText(p.calls); (combos[k] ||= {n:0,o:0,f:0,s:0}); const c=combos[k]; c.n++; c.o+=p.ratings.overall||0; c.f+=p.finished?1:0; c.s+=p.ratings.salty||0;});
+  const rank = Object.entries(combos).filter(([,v])=>v.n>=(SAMPLE?3:1)).sort((a,b)=>(b[1].o/b[1].n)-(a[1].o/a[1].n)||b[1].n-a[1].n).slice(0,8);
+  const M = SAMPLE ? (SAMPLE_MODEL ||= fitModel(activePosts())) : MODEL;
+  return `
+  <section class="stack">
+    <div class="stack-s"><h1>コール統計</h1><p class="muted">コールの量と、実際に感じた味との相関です。+1に近いほど「多くコールするほど強く感じる」、−1に近いほど「多くするほど弱く感じる」を表します。</p></div>
+    <div class="row">
+      <div class="field" style="flex:1;min-width:220px"><select id="s-shop" aria-label="店で絞り込む">${shopOptions(statShop,true).replace('店を決めていない','すべての店')}</select></div>
+      <label class="toggle"><input type="checkbox" id="s-sample" ${SAMPLE?'checked':''}>サンプルデータ（架空）で見る</label>
+    </div>
+    ${SAMPLE?'<div class="note note-sample" role="note"><strong>サンプル（架空のデータ）を表示中</strong><br>公開版にはまだ共有の記録がないため、仕組みを見るための架空の記録160件で計算しています。実際のお客さんの記録や、店の実際の傾向ではありません。</div>'
+      :'<div class="banner">この端末に保存したあなたの記録だけで計算しています。</div>'}
+    <div class="panel stack">
+      <div class="row"><h2>相関マップ</h2><span class="small muted num" style="margin-left:auto">記録 ${P.length}件</span></div>
+      ${enough? `<div class="heat"><table><thead><tr><th></th>${cols.map(c=>`<th scope="col">${c.name}</th>`).join('')}</tr></thead><tbody>
+        ${TOPS.map((t,i)=>`<tr><th scope="row" class="t-${t.k}">${t.name}</th>${corr[i].map(cell).join('')}</tr>`).join('')}</tbody></table></div>
+        <div class="legend"><span>−1</span><span class="g"></span><span>+1</span><span>（—は計算できない組み合わせ）</span></div>`
+        : `<div class="empty">${EMPTY}<p>記録が5件たまると相関マップが表示されます（いま${P.length}件）。</p><div class="row" style="justify-content:center"><a class="btn btn-accent" href="#post">記録する</a><button class="btn btn-ghost" type="button" id="s-try">サンプルで見る</button></div></div>`}
+    </div>
+    <div class="two">
+      <div class="panel stack-s">
+        <h2>満足度が高いコール</h2>
+        ${rank.length? `<div class="tbl"><table class="rank"><thead><tr><th>コール</th><th>件数</th><th>満足</th><th>完食率</th></tr></thead><tbody>${rank.map(([k,v])=>`<tr><td>${esc(k)}</td><td class="n">${v.n}</td><td class="n">${(v.o/v.n).toFixed(1)}</td><td class="n">${Math.round(v.f/v.n*100)}%</td></tr>`).join('')}</tbody></table></div>`
+          : '<p class="small muted">記録が集まると、満足度の高いコールの組み合わせがここに並びます。</p>'}
+      </div>
+      <div class="panel stack-s">
+        <h2>予測に使っている係数</h2>
+        <p class="small muted">コールを1段階増やした時に、味がどれだけ動くかの推定値です。記録が少ないうちは仮の初期値に寄せ、増えるほど実際の記録の値になります。</p>
+        <div class="tbl"><table class="rank"><thead><tr><th></th>${AX.map(a=>`<th>${a.name}</th>`).join('')}</tr></thead><tbody>
+          ${TOPS.map((t,i)=>`<tr><th class="t-${t.k}">${t.name}</th>${AX.map(a=>`<td class="n">${(M[a.k].b[i+1]>=0?'+':'')+M[a.k].b[i+1].toFixed(2)}</td>`).join('')}</tr>`).join('')}
+        </tbody></table></div>
+        <p class="xs">反映している記録：${M.salty.n}件${SAMPLE?'（サンプル）':''}。計算方法：口コミから作った店ごとの基準値に、コールの段数×係数を足しています（リッジ回帰）。</p>
+      </div>
+    </div>
+  </section>`;
+}
+function bindStats(root){
+  root.querySelector('#s-shop').addEventListener('change',e=>{statShop=e.target.value;render();});
+  const setS=v=>{SAMPLE=v; render();};
+  root.querySelector('#s-sample').addEventListener('change',e=>setS(e.target.checked));
+  root.querySelector('#s-try')?.addEventListener('click',()=>setS(true));
+}
+
+/* ---------- ルーター ---------- */
+const app=document.getElementById('app');
+let lastView='';
+function route(){ const h=(location.hash||'#home').slice(1); return h||'home'; }
+function render(){
+  const v=route(); const scroll = v===lastView;
+  let html, bind;
+  if(v.startsWith('s-')){ const id=v.slice(2); html=viewShop(id); bind=r=>bindShop(r,id); }
+  else if(v==='shops'){ html=viewShops(); bind=bindShops; }
+  else if(v==='post'){ html=viewPost(); bind=bindPost; }
+  else if(v==='stats'){ html=viewStats(); bind=bindStats; }
+  else { html=viewHome(); bind=bindHome; }
+  const y=window.scrollY;
+  app.innerHTML=html; bind(app);
+  document.querySelectorAll('.tabs a').forEach(a=>{ const on = a.dataset.v===v || (a.dataset.v==='shops'&&v.startsWith('s-')) || (a.dataset.v==='home'&&!['shops','post','stats'].includes(v)&&!v.startsWith('s-')); on?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current'); });
+  if(scroll) window.scrollTo(0,y); else window.scrollTo(0,0);
+  lastView=v;
+}
+window.addEventListener('hashchange',render);
+render();
+
+/* ---------- この端末の記録 ---------- */
+function syncLocal(){ POSTS = myEntries.filter(e=>BY[e.shop]); MODEL = fitModel(POSTS); }
+window.addEventListener('storage',e=>{ if(e.key===LS_KEY){ myEntries=loadLocal(); syncLocal(); render(); } });
+})();
+</script>
+</body>
+</html>

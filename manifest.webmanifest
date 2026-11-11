@@ -1,0 +1,17 @@
+{
+  "name": "ドンヨミ",
+  "short_name": "ドンヨミ",
+  "description": "二郎系ラーメンのコールと味の傾向を調べる非公式ガイド",
+  "lang": "ja",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "theme_color": "#F6F0E4",
+  "background_color": "#F6F0E4",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

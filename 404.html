@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ページが見つかりません｜ドンヨミ</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#F6F0E4">
+<link rel="icon" type="image/png" sizes="48x48" id="fav" href="/favicon.png">
+<style>
+/* ==========================================================================
+   ドンヨミ Design Tokens  v1.0
+   二郎系ラーメン専門サイト / PWA
+   - ライト: 生成りの食券紙 × 醤油 × 食券機の赤ボタン
+   - ダーク: 夜の行列、湯気の立つカウンター
+   使い方: <html> に data-theme="light" | "dark" を付けると手動切替。
+           未指定なら OS 設定 (prefers-color-scheme) に従う。
+   ========================================================================== */
+
+:root {
+  color-scheme: light;
+
+  /* ---------- Surface / Ink ---------- */
+  --bg:            #F6F0E4;  /* 生成りの食券紙 */
+  --bg-sunken:     #EDE4D3;
+  --surface:       #FFFCF6;  /* カード */
+  --surface-2:     #F1E9DA;  /* 入れ子・入力欄 */
+  --surface-raised:#FFFFFF;
+  --ink:           #1E1813;  /* 本文 (on --bg 15.5:1) */
+  --ink-muted:     #5A4E42;  /* 補足 (on --bg 7.1:1) */
+  --ink-subtle:    #6C5F51;  /* 注記・プレースホルダ (on --bg 5.4:1) */
+  --ink-inverse:   #FFF8EE;
+  --line:          #DCCFBA;  /* 区切り線 */
+  --line-strong:   #958670;  /* 入力枠・チップ枠 (on --bg 3.1:1, UI 要件) */
+
+  /* ---------- Brand ---------- */
+  --primary:        #7A3414;  /* 醤油 / カラメ。主要ボタン (8.5:1) */
+  --primary-hover:  #652A0F;
+  --primary-soft:   #F3E1D3;
+  --on-primary:     #FFF8EE;
+  --accent:         #B8281A;  /* 食券機の赤ボタン。CTA・強調 (white 6.3:1) */
+  --accent-hover:   #9C1F13;
+  --accent-soft:    #F8DDD6;
+  --on-accent:      #FFFFFF;
+  --focus-ring:     #1A63C0;  /* フォーカスは色相を変えて確実に視認 */
+
+  /* ---------- Ingredient palette (イラスト・アイコン用) ---------- */
+  --c-yasai:        #6E9A34;  /* キャベツ */
+  --c-yasai-dark:   #3F6A1C;
+  --c-moyashi:      #F4EFD9;  /* もやし */
+  --c-moyashi-line: #CBBF96;
+  --c-ninniku:      #EFE6CC;  /* 刻みニンニク */
+  --c-ninniku-dark: #B9A774;
+  --c-abura:        #F6E7B8;  /* 背脂 */
+  --c-abura-shine:  #FFFBEA;
+  --c-karame:       #5A240C;  /* カラメ醤油 */
+  --c-broth:        #B9773A;  /* 乳化スープ */
+  --c-broth-light:  #D9A061;
+  --c-pork:         #A9573A;  /* 豚 (赤身) */
+  --c-pork-fat:     #F1D3BC;  /* 豚 (脂身) */
+  --c-noodle:       #E2C27A;  /* 極太麺 */
+  --c-bowl:         #2B2420;  /* 丼 */
+  --c-bowl-rim:     #F2EBDD;
+  --c-bowl-band:    #B8281A;  /* 丼の帯 (単色) */
+  --c-steam:        rgba(255, 255, 255, 0.85);
+  --c-steam-line:   rgba(90, 78, 66, 0.35);
+  --c-outline:      #1E1813;  /* イラスト輪郭線 */
+
+  /* ---------- Topping text colors (文字で使う時はこちら: AA 4.5:1 以上) ---------- */
+  --t-yasai:   #3F6A1C;  /* 6.2:1 on --surface */
+  --t-ninniku: #77662F;  /* 5.5:1 */
+  --t-abura:   #8A6410;  /* 5.2:1 */
+  --t-karame:  #5A240C;  /* 12:1 */
+
+  /* ---------- Call level (なし→マシマシ, 量の順序尺度) ---------- */
+  --lv-0: #E6DDCD;  /* なし     */
+  --lv-1: #E9C9A5;  /* 少なめ   */
+  --lv-2: #D9965C;  /* 普通     */
+  --lv-3: #B9531F;  /* マシ     */
+  --lv-4: #7A2410;  /* マシマシ */
+  --on-lv-0: #1E1813; --on-lv-1: #1E1813; --on-lv-2: #1E1813;
+  --on-lv-3: #FFFFFF; --on-lv-4: #FFFFFF;
+
+  /* ---------- Taste axes (レーダー/バー。5軸を区別) ---------- */
+  --taste-salty:  #B8281A;  /* しょっぱさ */
+  --taste-rich:   #B9773A;  /* こってり/乳化 */
+  --taste-noodle: #9A7A1E;  /* 麺の存在感 */
+  --taste-pork:   #A9573A;  /* 豚 */
+  --taste-volume: #3F6A1C;  /* 量 */
+  --chart-fill:   rgba(184, 40, 26, 0.18);
+  --chart-stroke: #B8281A;
+  --chart-grid:   #DCCFBA;
+  --chart-axis:   #6C5F51;
+
+  /* ---------- Status ---------- */
+  --success: #2F6B2A; --success-soft: #DDEBD3;
+  --warning: #8A5A00; --warning-soft: #F7E7C2;
+  --danger:  #B3261E; --danger-soft:  #F7DAD6;
+  --info:    #1F5FA8; --info-soft:    #DCE7F5;
+
+  /* ---------- Pattern ---------- */
+  --pattern-ink:     rgba(122, 52, 20, 0.07);
+  --pattern-opacity: 1;
+
+  /* ---------- Typography ---------- */
+  --font-display: "Dela Gothic One", "Hiragino Kaku Gothic StdN", "Yu Gothic", sans-serif;
+  --font-body:    "Zen Kaku Gothic New", "Hiragino Kaku Gothic ProN", "Yu Gothic UI", "Meiryo", system-ui, sans-serif;
+  --font-num:     "Zen Kaku Gothic New", system-ui, sans-serif; /* + font-variant-numeric: tabular-nums */
+
+  --fs-xs:   0.75rem;   /* 12 注記 */
+  --fs-sm:   0.875rem;  /* 14 補足・チップ */
+  --fs-md:   1rem;      /* 16 本文 (スマホ最小) */
+  --fs-lg:   1.125rem;  /* 18 リード */
+  --fs-xl:   1.375rem;  /* 22 h3 */
+  --fs-2xl:  1.75rem;   /* 28 h2 */
+  --fs-3xl:  clamp(2rem, 7vw, 3rem);    /* h1 */
+  --fs-hero: clamp(2.5rem, 11vw, 4.5rem);
+
+  --fw-regular: 400; --fw-medium: 500; --fw-bold: 700; --fw-black: 900;
+  --lh-tight: 1.25; --lh-snug: 1.45; --lh-body: 1.75;
+  --ls-display: 0.02em; --ls-label: 0.06em;
+
+  /* ---------- Spacing (4px base) ---------- */
+  --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px; --sp-4: 16px;
+  --sp-5: 20px; --sp-6: 24px; --sp-8: 32px; --sp-10: 40px;
+  --sp-12: 48px; --sp-16: 64px;
+  --gutter: 16px;            /* スマホ左右余白 */
+  --content-max: 720px;      /* 本文最大幅 */
+  --layout-max: 1120px;
+  --tap-min: 44px;           /* タップ領域の最小 */
+
+  /* ---------- Radius ---------- */
+  --r-xs: 4px;    /* タグ・バッジ */
+  --r-sm: 8px;    /* 入力・小ボタン */
+  --r-md: 12px;   /* ボタン・チップ群 */
+  --r-lg: 16px;   /* カード */
+  --r-xl: 24px;   /* シート・モーダル */
+  --r-pill: 999px;
+  --r-ticket: 6px;/* 食券型カード (角は小さく、切り欠きで表現) */
+
+  /* ---------- Shadow (暖色寄りの影) ---------- */
+  --shadow-1: 0 1px 2px rgba(60, 35, 15, 0.08), 0 1px 1px rgba(60, 35, 15, 0.04);
+  --shadow-2: 0 2px 6px rgba(60, 35, 15, 0.10), 0 8px 20px rgba(60, 35, 15, 0.06);
+  --shadow-3: 0 6px 16px rgba(60, 35, 15, 0.14), 0 18px 40px rgba(60, 35, 15, 0.10);
+  --shadow-press: inset 0 2px 0 rgba(0, 0, 0, 0.18); /* 食券ボタン押下 */
+  --shadow-button: 0 3px 0 var(--primary-hover);     /* 食券機ボタンの厚み */
+  --shadow-button-accent: 0 3px 0 var(--accent-hover);
+
+  /* ---------- Border ---------- */
+  --bw: 1px; --bw-strong: 2px;
+
+  /* ---------- Motion ---------- */
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-fast: 120ms; --dur-base: 200ms; --dur-slow: 360ms;
+
+  /* ---------- Z-index ---------- */
+  --z-header: 50; --z-sheet: 80; --z-toast: 100;
+}
+
+/* ---------- Dark (OS 設定に追従。ただし data-theme="light" 明示時は除外) ---------- */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg:            #14100C;
+    --bg-sunken:     #0E0B08;
+    --surface:       #1E1914;
+    --surface-2:     #29221B;
+    --surface-raised:#2F2720;
+    --ink:           #F4ECDF;
+    --ink-muted:     #C4B6A3;
+    --ink-subtle:    #9C8D7A;
+    --ink-inverse:   #1E1813;
+    --line:          #3A3027;
+    --line-strong:   #806E5B;
+
+    --primary:        #E8945A;
+    --primary-hover:  #F2A975;
+    --primary-soft:   #3A2416;
+    --on-primary:     #1C0F06;
+    --accent:         #FF6A52;
+    --accent-hover:   #FF8672;
+    --accent-soft:    #3D1A14;
+    --on-accent:      #1C0705;
+    --focus-ring:     #7DB4FF;
+
+    --c-yasai:        #8DBB4E;
+    --c-yasai-dark:   #4E7D25;
+    --c-moyashi:      #EDE6CC;
+    --c-moyashi-line: #A99D74;
+    --c-ninniku:      #E6DBBC;
+    --c-ninniku-dark: #A8955F;
+    --c-abura:        #F1DFA6;
+    --c-abura-shine:  #FFF8DE;
+    --c-karame:       #3E1806;
+    --c-broth:        #A7672D;
+    --c-broth-light:  #C98B4A;
+    --c-pork:         #9C4D31;
+    --c-pork-fat:     #E8C6AC;
+    --c-noodle:       #D6B46A;
+    --c-bowl:         #3B312A;
+    --c-bowl-rim:     #E8DFCE;
+    --c-bowl-band:    #D2412E;
+    --c-steam:        rgba(255, 248, 238, 0.55);
+    --c-steam-line:   rgba(244, 236, 223, 0.35);
+    --c-outline:      #0B0907;
+
+    --t-yasai:   #A9D46B;
+    --t-ninniku: #E2D3A2;
+    --t-abura:   #F0CF72;
+    --t-karame:  #E8945A;
+
+    --lv-0: #3A3027;
+    --lv-1: #6B4A30;
+    --lv-2: #9A5C32;
+    --lv-3: #E07B3F;
+    --lv-4: #FFB27A;
+    --on-lv-0: #F4ECDF; --on-lv-1: #F4ECDF; --on-lv-2: #FFFFFF;
+    --on-lv-3: #1C0F06; --on-lv-4: #1C0F06;
+
+    --taste-salty:  #FF6A52;
+    --taste-rich:   #E8945A;
+    --taste-noodle: #E2C27A;
+    --taste-pork:   #E3866A;
+    --taste-volume: #A9D46B;
+    --chart-fill:   rgba(255, 106, 82, 0.22);
+    --chart-stroke: #FF6A52;
+    --chart-grid:   #3A3027;
+    --chart-axis:   #9C8D7A;
+
+    --success: #8FD18A; --success-soft: #1F3320;
+    --warning: #F2C063; --warning-soft: #3A2D12;
+    --danger:  #FF8A80; --danger-soft:  #3D1A17;
+    --info:    #8AB8F5; --info-soft:    #172A42;
+
+    --pattern-ink: rgba(244, 236, 223, 0.045);
+
+    --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.5);
+    --shadow-2: 0 2px 6px rgba(0, 0, 0, 0.45), 0 8px 20px rgba(0, 0, 0, 0.35);
+    --shadow-3: 0 6px 16px rgba(0, 0, 0, 0.55), 0 18px 40px rgba(0, 0, 0, 0.45);
+    --shadow-press: inset 0 2px 0 rgba(0, 0, 0, 0.35);
+    --shadow-button: 0 3px 0 #9A5A2E;
+    --shadow-button-accent: 0 3px 0 #A8382A;
+  }
+}
+
+/* ---------- Dark (手動指定) : 上と同一値 ---------- */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg:            #14100C;
+  --bg-sunken:     #0E0B08;
+  --surface:       #1E1914;
+  --surface-2:     #29221B;
+  --surface-raised:#2F2720;
+  --ink:           #F4ECDF;
+  --ink-muted:     #C4B6A3;
+  --ink-subtle:    #9C8D7A;
+  --ink-inverse:   #1E1813;
+  --line:          #3A3027;
+  --line-strong:   #806E5B;
+
+  --primary:        #E8945A;
+  --primary-hover:  #F2A975;
+  --primary-soft:   #3A2416;
+  --on-primary:     #1C0F06;
+  --accent:         #FF6A52;
+  --accent-hover:   #FF8672;
+  --accent-soft:    #3D1A14;
+  --on-accent:      #1C0705;
+  --focus-ring:     #7DB4FF;
+
+  --c-yasai:        #8DBB4E;
+  --c-yasai-dark:   #4E7D25;
+  --c-moyashi:      #EDE6CC;
+  --c-moyashi-line: #A99D74;
+  --c-ninniku:      #E6DBBC;
+  --c-ninniku-dark: #A8955F;
+  --c-abura:        #F1DFA6;
+  --c-abura-shine:  #FFF8DE;
+  --c-karame:       #3E1806;
+  --c-broth:        #A7672D;
+  --c-broth-light:  #C98B4A;
+  --c-pork:         #9C4D31;
+  --c-pork-fat:     #E8C6AC;
+  --c-noodle:       #D6B46A;
+  --c-bowl:         #3B312A;
+  --c-bowl-rim:     #E8DFCE;
+  --c-bowl-band:    #D2412E;
+  --c-steam:        rgba(255, 248, 238, 0.55);
+  --c-steam-line:   rgba(244, 236, 223, 0.35);
+  --c-outline:      #0B0907;
+
+  --t-yasai:   #A9D46B;
+  --t-ninniku: #E2D3A2;
+  --t-abura:   #F0CF72;
+  --t-karame:  #E8945A;
+
+  --lv-0: #3A3027;
+  --lv-1: #6B4A30;
+  --lv-2: #9A5C32;
+  --lv-3: #E07B3F;
+  --lv-4: #FFB27A;
+  --on-lv-0: #F4ECDF; --on-lv-1: #F4ECDF; --on-lv-2: #FFFFFF;
+  --on-lv-3: #1C0F06; --on-lv-4: #1C0F06;
+
+  --taste-salty:  #FF6A52;
+  --taste-rich:   #E8945A;
+  --taste-noodle: #E2C27A;
+  --taste-pork:   #E3866A;
+  --taste-volume: #A9D46B;
+  --chart-fill:   rgba(255, 106, 82, 0.22);
+  --chart-stroke: #FF6A52;
+  --chart-grid:   #3A3027;
+  --chart-axis:   #9C8D7A;
+
+  --success: #8FD18A; --success-soft: #1F3320;
+  --warning: #F2C063; --warning-soft: #3A2D12;
+  --danger:  #FF8A80; --danger-soft:  #3D1A17;
+  --info:    #8AB8F5; --info-soft:    #172A42;
+
+  --pattern-ink: rgba(244, 236, 223, 0.045);
+
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-2: 0 2px 6px rgba(0, 0, 0, 0.45), 0 8px 20px rgba(0, 0, 0, 0.35);
+  --shadow-3: 0 6px 16px rgba(0, 0, 0, 0.55), 0 18px 40px rgba(0, 0, 0, 0.45);
+  --shadow-press: inset 0 2px 0 rgba(0, 0, 0, 0.35);
+  --shadow-button: 0 3px 0 #9A5A2E;
+  --shadow-button-accent: 0 3px 0 #A8382A;
+}
+
+/* ---------- Base ---------- */
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background-color: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--fs-md);
+  line-height: var(--lh-body);
+  font-feature-settings: "palt" 0;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, .display {
+  font-family: var(--font-display);
+  font-weight: 400;              /* Dela Gothic One は単一ウェイト */
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-display);
+  font-feature-settings: "palt" 1;
+}
+h3, h4 { font-family: var(--font-body); font-weight: var(--fw-black); line-height: var(--lh-snug); }
+.num { font-family: var(--font-num); font-variant-numeric: tabular-nums; font-weight: var(--fw-bold); }
+:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 2px; }
+
+/* 背景パターン (pattern.svg をインライン化して url() に入れるか、CSS mask で着色) */
+.bg-pattern {
+  position: relative;
+  isolation: isolate;
+}
+.bg-pattern::before {
+  content: "";
+  position: absolute; inset: 0; z-index: -1;
+  background-color: var(--pattern-ink);
+  -webkit-mask: url("pattern.svg") repeat 0 0 / 160px 160px;
+          mask: url("pattern.svg") repeat 0 0 / 160px 160px;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}
+
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:var(--ink);font-family:var(--font-body);line-height:1.7;padding:24px max(16px,env(safe-area-inset-left,0px))}
+main{max-width:520px;text-align:center;display:flex;flex-direction:column;gap:16px;align-items:center}
+svg{width:min(280px,80vw);height:auto}
+h1{font-size:1.4rem;margin:0}
+p{margin:0;color:var(--ink-muted)}
+a.btn{display:inline-flex;align-items:center;min-height:48px;padding:0 20px;border-radius:12px;background:var(--accent);color:var(--on-accent);font-weight:900;text-decoration:none}
+</style>
+</head>
+<body>
+<main>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 96" role="img" aria-label="ドンヨミ">
+  
+  
+  <g transform="translate(4 8)">
+    <path d="M8 0 H72 a8 8 0 0 1 8 8 V30 a10 10 0 0 0 0 20 V72 a8 8 0 0 1 -8 8 H8 a8 8 0 0 1 -8 -8 V50 a10 10 0 0 0 0 -20 V8 a8 8 0 0 1 8 -8 Z" fill="var(--logo-mark, #B8281A)"/>
+    
+    <path d="M32 20 c-4 -4 4 -7 0 -12 M48 20 c-4 -4 4 -7 0 -12" fill="none" stroke="var(--logo-mark-ink, #FFF8EE)" stroke-width="3.5" stroke-linecap="round"/>
+    
+    <path d="M22 50 C24 38 32 26 40 25 C48 26 56 38 58 50 Z" fill="var(--logo-mark-ink, #FFF8EE)" opacity=".9"/>
+    
+    <path d="M14 48 H66 C65 60 54 68 40 68 C26 68 15 60 14 48 Z" fill="var(--logo-mark-ink, #FFF8EE)"/>
+  </g>
+  
+  <text x="100" y="62" font-family="'Dela Gothic One', sans-serif" font-size="46" letter-spacing="1" fill="var(--logo-ink, var(--ink, #1E1813))">ドンヨミ</text>
+  <text x="102" y="86" font-family="'Zen Kaku Gothic New', sans-serif" font-weight="700" font-size="12" letter-spacing="3" fill="var(--logo-sub, var(--ink-muted, #5A4E42))">DONYOMI · CALL &amp; TASTE</text>
+</svg>
+<h1>ページが見つかりません</h1>
+<p>URLが変わったか、削除された可能性があります。</p>
+<a class="btn" id="home" href="./">ドンヨミのトップへ</a>
+</main>
+<script>
+// GitHub Pages のプロジェクトサイト（/リポジトリ名/）でもトップへ戻れるように、最初の階層を基準にする
+(function(){try{var seg=location.pathname.split('/').filter(Boolean);var base=(location.hostname.endsWith('github.io')&&seg.length)?'/'+seg[0]+'/':'/';document.getElementById('home').href=base;document.getElementById('fav').href=base+'favicon.png';}catch(e){}})();
+</script>
+</body>
+</html>
