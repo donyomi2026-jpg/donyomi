@@ -557,6 +557,33 @@ footer{border-top:var(--bw) solid var(--line);padding-block:var(--sp-6);color:va
 .note-sample strong{color:var(--accent)}
 .save-box{border-top:var(--bw) dashed var(--line-strong);padding-top:var(--sp-3)}
 footer a{color:inherit}
+.hint{margin:4px 0 0;color:var(--ink-muted)}
+.gloss{border:var(--bw) dashed var(--line-strong);border-radius:var(--r-sm);padding:10px 14px}
+.gloss summary{cursor:pointer;font-weight:var(--fw-bold);font-size:var(--fs-sm)}
+.gloss dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px 16px;margin:10px 0 0}
+.gloss dt,.gloss-list dt{font-weight:var(--fw-bold)}
+.gloss dd,.gloss-list dd{margin:0;font-size:var(--fs-sm);color:var(--ink-muted)}
+.gloss-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:0}
+.convo{display:flex;flex-direction:column;gap:6px;background:var(--accent-soft);border-radius:var(--r-md);padding:12px 16px}
+.convo p{margin:0}
+.convo .who{display:inline-block;min-width:5.5em;font-weight:var(--fw-bold);font-size:var(--fs-sm);color:var(--ink-muted)}
+.convo .who.you{color:var(--accent)}
+.breakdown{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;font-size:var(--fs-sm)}
+.breakdown li{display:grid;grid-template-columns:7em 1fr;gap:8px;align-items:center}
+.breakdown li>span:first-child{display:inline-flex;align-items:center;gap:4px;font-weight:var(--fw-bold)}
+.breakdown svg{width:18px;height:18px}
+.pred-box{border-top:var(--bw) dashed var(--line-strong);padding-top:var(--sp-3)}
+.pred-words{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:6px}.pred-words strong{white-space:nowrap}
+.pred-words li{display:flex;justify-content:space-between;gap:8px;background:var(--surface);border:var(--bw) solid var(--line);border-radius:var(--r-sm);padding:6px 10px;font-size:var(--fs-sm)}
+.guide-steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.guide-steps li{display:flex;gap:14px;align-items:flex-start}
+.guide-steps .num{flex:none;width:32px;height:32px;border-radius:50%;background:var(--primary);color:var(--on-primary);display:grid;place-items:center;font-family:var(--font-display)}
+.guide-steps h3{margin:0 0 4px}
+.guide-steps p{margin:0}
+.hero-art svg{max-width:300px}
+@media (max-width:760px){.hero-art svg{max-width:180px}}
+@media (max-width:560px){.logo svg{height:26px}.top .wrap{padding-block:4px}.tabs a{min-height:36px;font-size:12px}}
+.top.compact .logo svg{height:24px}
 </style>
 </head>
 <body>
@@ -581,6 +608,7 @@ footer a{color:inherit}
 </svg></a>
     <nav class="tabs" aria-label="メイン">
       <a href="#home" data-v="home">一発コール</a>
+      <a href="#guide" data-v="guide">初めて</a>
       <a href="#shops" data-v="shops">店を探す</a>
       <a href="#post" data-v="post">記録する</a>
       <a href="#stats" data-v="stats">コール統計</a>
@@ -957,11 +985,40 @@ function shopOptions(sel, includeAll){
 
 /* ---------- 画面：一発コール ---------- */
 const QS = [
-  {k:'hunger', q:'お腹の空き具合は？', a:['ふつう','かなり空いてる','食べきれるか不安']},
-  {k:'salt',   q:'しょっぱい味は？',   a:['苦手','ふつう','好き']},
-  {k:'garlic', q:'ニンニクは？',       a:['この後人に会う','平気','大好き']},
-  {k:'fat',    q:'脂っこいのは？',     a:['控えめがいい','ふつう','好き']}
+  {k:'hunger', q:'今日はどれくらい食べられそう？', a:['ふつう','かなり空いてる','食べきれるか不安'], hint:'ヤサイ（もやし・キャベツ）の量と、麺を少なめにするかが変わります'},
+  {k:'salt',   q:'濃い味付けは好き？',           a:['苦手','ふつう','好き'], hint:'カラメ（醤油ダレの追加）を付けるかが変わります'},
+  {k:'garlic', q:'食後に人と会う予定はある？',   a:['ある','特にない','ないし大好き'], hint:'ニンニク（刻みニンニク）の量が変わります。においはしばらく残ります'},
+  {k:'fat',    q:'背脂たっぷりのラーメンは好き？', a:['控えめがいい','ふつう','好き'], hint:'アブラ（背脂の追加）を付けるかが変わります'}
 ];
+const GLOSS = [
+  ['コール','無料トッピングの注文。食券とは別に、口で伝えます'],
+  ['ヤサイ','ゆでたもやし・キャベツ。マシで山盛りになります'],
+  ['ニンニク','刻んだ生ニンニク。香りと辛みが強く、においが残ります'],
+  ['アブラ','背脂。甘みとこってり感が増えます'],
+  ['カラメ','醤油ダレの追加。味が濃く、しょっぱくなります'],
+  ['マシ／マシマシ','「多め」「さらに多め」。初回はマシまでが無難'],
+  ['スクナメ／ヌキ','「少なめ」「入れない」'],
+  ['そのままで','何も足さない時の言い方']
+];
+function glossary(){ return `<details class="gloss"><summary>コールの言葉がわからない人へ</summary><dl>${GLOSS.map(g=>`<div><dt>${g[0]}</dt><dd>${g[1]}</dd></div>`).join('')}</dl></details>`; }
+const LVW = v => v==null ? '不明' : v<2.2 ? '控えめ' : v<2.8 ? 'やや控えめ' : v<3.3 ? '標準' : v<3.9 ? 'やや強め' : '強め';
+function callBreakdown(c){
+  const why = {
+    yasai:['ヤサイを入れない','ヤサイを少なめに','ヤサイはふつうの量','ヤサイを多めに','ヤサイを山盛りに'],
+    ninniku:['ニンニクは入れない','ニンニクを少しだけ','ニンニクをふつうに','ニンニクを多めに','ニンニクをかなり多めに'],
+    abura:['背脂は足さない','背脂を少しだけ','背脂を足す','背脂を多めに','背脂をかなり多めに'],
+    karame:['醤油ダレは足さない','醤油ダレを少しだけ','醤油ダレを足して濃いめに','醤油ダレを多めに','醤油ダレをかなり多めに']
+  };
+  return `<ul class="breakdown">${TOPS.map(t=>`<li><span class="t-${t.k}">${ICON[t.k]}${t.name}</span><span>${why[t.k][c[t.k]]}</span></li>`).join('')}</ul>`;
+}
+function quizReasons(){
+  const r=[];
+  r.push(['ヤサイは普通盛り（何も言わなければ普通）','空腹なのでヤサイを多めに','量が不安なのでヤサイは増やさない'][quiz.hunger]);
+  r.push(['人に会う予定があるのでニンニクは入れない','予定がないのでニンニクを入れる','ニンニク好きなので多めに'][quiz.garlic]);
+  r.push(['脂は控えめが好みなので背脂は足さない','脂はふつうなので背脂は足さない','背脂好きなのでアブラを足す'][quiz.fat]);
+  r.push(quiz.salt===2 ? '濃い味好きなのでカラメを足す（濃い店では足さない）' : '濃い味は求めていないのでカラメは足さない');
+  return r;
+}
 let quiz = {hunger:0, salt:1, garlic:1, fat:1, shop:''};
 function quizCall(){
   const s = BY[quiz.shop]; const vol = s?.taste?.volume ?? 3; const salty = s?.taste?.soup_richness ?? 3;
@@ -977,6 +1034,7 @@ function quizCall(){
   if(quiz.salt===0 && salty>=4) tips.push('この店はスープが濃いめという評判です。カラメは付けないのがおすすめです。');
   if(quiz.salt===2 && salty>=4) tips.push('この店はもともと濃いめなので、カラメは2回目以降に試すのがおすすめです。');
   if(quiz.garlic===0) tips.push('ニンニクを入れない時は「そのままで」でも通じます。');
+  tips.push('初めての店では、まず周りの人の頼み方を少し見てから注文すると安心です。');
   return {c, tips};
 }
 function shareUrl(c){
@@ -986,34 +1044,52 @@ function shareUrl(c){
 }
 function viewHome(){
   const {c,tips} = quizCall(); const s=BY[quiz.shop];
-  const timing = s?.call_timing ? s.call_timing.replace(/^（直系共通の一般的な流れ）/,'') : '多くの店では、ラーメンが出てくる直前に「ニンニク入れますか？」と聞かれます。その時に、下のコールをそのまま言えばOKです。';
+  const timing = s?.call_timing ? s.call_timing.replace(/^（直系共通の一般的な流れ）/,'') : '多くの店では、ラーメンが出てくる直前に「ニンニク入れますか？」と聞かれます。その時に、上のおすすめコールをそのまま言えばOKです。';
   return `
   <section class="hero">
     <div class="stack">
       <span class="label">二郎系ラーメンのコールと味の記録</span>
       <h1>初めてでも、<br><em>一発で</em>コール。</h1>
-      <p class="lead">4つの質問に答えるだけで、言うべきコールが決まります。みんなが記録したコールと味の関係から、その一杯の味も予測します。</p>
+      <p class="lead">4つの質問に答えるだけで、店員さんに言うコール（無料トッピングの注文）が決まります。</p>
+      <div class="row"><a class="btn btn-accent" href="#qtitle" id="go-quiz">コールを作る</a><a class="btn btn-ghost" href="#guide">初めての二郎系はこちら</a></div>
     </div>
     <div class="hero-art">${HERO}</div>
   </section>
   <section class="ticket stack" aria-labelledby="qtitle">
     <h2 id="qtitle">一発コール診断</h2>
-    <div class="field q"><label class="label" for="q-shop">行く店（任意）</label><select id="q-shop">${shopOptions(quiz.shop,true)}</select></div>
-    ${QS.map(q=>`<div class="q"><span class="label">${q.q}</span><div class="choices" data-q="${q.k}">${q.a.map((a,i)=>`<button type="button" aria-pressed="${quiz[q.k]===i}" data-i="${i}">${a}</button>`).join('')}</div></div>`).join('')}
+    <div class="field q"><label class="label" for="q-shop">行く店</label><select id="q-shop">${shopOptions(quiz.shop,true)}</select>
+      <p class="xs">${s?'この店の口コミの傾向に合わせて提案します。':'店を選ぶと、その店の味の傾向や注文の流れに合わせた提案に変わります。決めていなければ一般的な二郎系の目安で提案します。'}</p></div>
+    ${QS.map(q=>`<div class="q"><span class="label">${q.q}</span><div class="choices" data-q="${q.k}">${q.a.map((a,i)=>`<button type="button" aria-pressed="${quiz[q.k]===i}" data-i="${i}">${a}</button>`).join('')}</div><p class="xs hint">${q.hint}</p></div>`).join('')}
+    ${glossary()}
     <hr class="perf">
-    <div class="callout">
-      <span class="xs">店員さんに聞かれたら、こう言う</span>
+    <div class="callout" id="result">
+      <span class="xs">あなたへのおすすめコール（店員さんにそのまま伝えよう）</span>
       <span class="say" id="say">${callText(c)}</span>
       <div class="row"><button class="btn btn-accent" type="button" id="copy-call">コールをコピー</button>
-      <a class="btn btn-ghost" href="#post" id="to-post">食べたら記録する</a>
+      <a class="btn btn-ghost" href="#post" id="to-post">今回の一杯を記録する</a>
       <a class="btn btn-ghost" id="share-x" href="${esc(shareUrl(c))}" target="_blank" rel="noopener">Xでシェア</a></div>
+    </div>
+    <div class="convo" aria-label="注文の会話例">
+      <p><span class="who">店員さん</span>「ニンニク入れますか？」</p>
+      <p><span class="who you">あなた</span>「${esc(callText(c))}」</p>
+      <p class="xs">これで注文完了。ニンニクを聞かれた時に、ほかのトッピングもまとめて言います。</p>
     </div>
     <div class="two">
       <div class="stack-s">
-        <span class="label">言うタイミング</span><p class="small">${esc(timing)}</p>
+        <span class="label">① このコールの中身</span>${callBreakdown(c)}
+        <span class="label">② なぜこのコール？</span>
+        <ul class="small" style="margin:0;padding-left:1.2em">${quizReasons().map(t=>`<li>${esc(t)}</li>`).join('')}</ul>
+      </div>
+      <div class="stack-s">
+        <span class="label">③ 初めての人へのアドバイス</span>
+        <p class="small"><strong>言うタイミング：</strong>${esc(timing)}</p>
         <ul class="small" style="margin:0;padding-left:1.2em">${tips.map(t=>`<li>${esc(t)}</li>`).join('')}</ul>
       </div>
-      <div class="stack-s"><span class="label">この一杯の予想${s?'（'+esc(shortName(s))+'）':'（標準的な店）'}</span>${predBars(predict(s,c))}</div>
+    </div>
+    <div class="stack-s pred-box">
+      <span class="label">④ 食べたときの予想 ${s?'— '+esc(shortName(s))+'の口コミ傾向をもとにした予測':'— 一般的な二郎系の目安'}</span>
+      ${(()=>{const p=predict(s,c);return `<ul class="pred-words">${AX.map(a=>`<li><span>${a.name}</span><strong>${LVW(p[a.k])}</strong></li>`).join('')}</ul>`+predBars(p);})()}
+      <p class="xs">${s?'数値は1〜5。口コミの傾向（実際の評価ではなく、そこからの推定）に、コールの影響を足した予測です。実際の評価は店のページの「味の傾向」を見てください。':'店を選んでいないので、標準的な店を想定した目安です。同じコールでも、スープの濃さや背脂の量は店によって大きく違います。'}</p>
     </div>
   </section>
   <section class="stack">
@@ -1028,10 +1104,50 @@ function viewHome(){
   </section>`;
 }
 function bindHome(root){
-  root.querySelectorAll('.choices').forEach(g=>g.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;quiz[g.dataset.q]=+b.dataset.i;render();}));
+  root.querySelectorAll('.choices').forEach(g=>g.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;quiz[g.dataset.q]=+b.dataset.i;quiz.answered=(quiz.answered||new Set()).add(g.dataset.q);render();
+    if(quiz.answered.size>=QS.length && !quiz.jumped){ quiz.jumped=true; const r=document.getElementById('result'); if(r) r.scrollIntoView({behavior:'smooth',block:'center'}); }}));
   root.querySelector('#q-shop').addEventListener('change',e=>{quiz.shop=e.target.value;render();});
+  root.querySelector('#go-quiz').addEventListener('click',e=>{e.preventDefault();document.getElementById('qtitle').scrollIntoView({behavior:'smooth',block:'start'});});
   root.querySelector('#copy-call').addEventListener('click',()=>copy(document.getElementById('say').textContent));
   root.querySelector('#to-post').addEventListener('click',()=>{ const {c}=quizCall(); form.calls={...c}; if(quiz.shop) form.shop=quiz.shop; });
+}
+
+/* ---------- 画面：初めてガイド ---------- */
+function viewGuide(){
+  const steps=[
+    ['並ぶ','行列は店の外まで続くことがあります。並び方や食券を買う順番は店ごとに違うので、張り紙と前の人の動きを見ます。'],
+    ['食券を買う','初めてなら「小ラーメン」で十分です。「大」はかなりの量です。「豚入り」はチャーシューが増えます。'],
+    ['食券を出す・麺量を伝える','席に着いたら食券をカウンターの上に置きます。麺を減らしたい時は、このタイミングか聞かれた時に「麺少なめ」「半分」と伝えます。'],
+    ['コールする','ラーメンが出る直前に「ニンニク入れますか？」と聞かれたら、トッピングをまとめて言います。何もいらなければ「そのままで」。'],
+    ['食べる','長居せず、なるべく早めに食べるのがマナーとされています。スマホを見ながらゆっくり、は避けます。'],
+    ['片付ける','食べ終わったら丼をカウンターの上に上げ、テーブルを拭いて「ごちそうさま」。店によって作法が違うので周りに合わせます。']
+  ];
+  return `
+  <section class="stack">
+    <div class="stack-s"><span class="label">初めての二郎系ガイド</span><h1>入店から食べ終わるまで</h1>
+    <p class="muted">はじめての人がつまずきやすいところをまとめました。細かいルールは店ごとに違うので、迷ったら店の張り紙と周りの人に合わせてください。</p></div>
+    <ol class="guide-steps">${steps.map((s,i)=>`<li class="panel"><span class="num">${i+1}</span><div><h3>${s[0]}</h3><p class="small">${s[1]}</p></div></li>`).join('')}</ol>
+  </section>
+  <section class="stack">
+    <h2>食券の選び方</h2>
+    <div class="road">
+      <div class="panel"><h3>小ラーメン</h3><p class="small muted">名前は「小」でも、一般的なラーメン店の大盛り以上の量がある店が多いです。初めてならこれ。</p></div>
+      <div class="panel"><h3>大ラーメン</h3><p class="small muted">さらに麺が増えます。食べ慣れてから。残すのは避けたいので、無理をしないのが一番です。</p></div>
+      <div class="panel"><h3>豚入り・豚ダブル</h3><p class="small muted">分厚いチャーシュー（豚）が増えます。量がさらに増えるので、初回は普通の豚で様子を見るのがおすすめ。</p></div>
+      <div class="panel"><h3>麺少なめ・半分</h3><p class="small muted">食べきれるか不安なら、食券を出す時に伝えます。追加料金はかからない店がほとんどです。</p></div>
+    </div>
+    <p class="xs">量や呼び方は店によって違います。店のページで、わかっている範囲の注文の流れを確認できます。</p>
+  </section>
+  <section class="stack">
+    <h2>コールの言葉</h2>
+    <dl class="gloss-list">${GLOSS.map(g=>`<div class="panel"><dt>${g[0]}</dt><dd class="small">${g[1]}</dd></div>`).join('')}</dl>
+    <div class="convo">
+      <p><span class="who">店員さん</span>「ニンニク入れますか？」</p>
+      <p><span class="who you">あなた</span>「ニンニク、ヤサイ少なめで」</p>
+      <p class="xs">これで注文完了です。</p>
+    </div>
+    <div class="row"><a class="btn btn-accent" href="#home">自分のコールを作る</a><a class="btn btn-ghost" href="#shops">店を探す</a></div>
+  </section>`;
 }
 
 /* ---------- 画面：店を探す ---------- */
@@ -1111,7 +1227,7 @@ function viewShop(id){
         <h2>このコールだと、どんな味？</h2>
         ${callRows(detCalls,'d-')}
         <div class="callout"><span class="xs">言うコール</span><span class="say" id="dsay">${callText(detCalls)}</span>
-          <div class="row"><button class="btn btn-accent" type="button" id="dcopy">コピー</button><a class="btn btn-ghost" href="#post" id="dpost">この内容で記録する</a></div></div>
+          <div class="row"><button class="btn btn-accent" type="button" id="dcopy">コピー</button><a class="btn btn-ghost" href="#post" id="dpost">この一杯を記録する</a></div></div>
         <div id="dpred">${predBars(predict(s,detCalls))}</div>
       </div>
       <div class="panel stack-s">
@@ -1305,14 +1421,16 @@ function render(){
   else if(v==='shops'){ html=viewShops(); bind=bindShops; }
   else if(v==='post'){ html=viewPost(); bind=bindPost; }
   else if(v==='stats'){ html=viewStats(); bind=bindStats; }
+  else if(v==='guide'){ html=viewGuide(); bind=()=>{}; }
   else { html=viewHome(); bind=bindHome; }
   const y=window.scrollY;
   app.innerHTML=html; bind(app);
-  document.querySelectorAll('.tabs a').forEach(a=>{ const on = a.dataset.v===v || (a.dataset.v==='shops'&&v.startsWith('s-')) || (a.dataset.v==='home'&&!['shops','post','stats'].includes(v)&&!v.startsWith('s-')); on?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current'); });
+  document.querySelectorAll('.tabs a').forEach(a=>{ const on = a.dataset.v===v || (a.dataset.v==='shops'&&v.startsWith('s-')) || (a.dataset.v==='home'&&!['shops','post','stats','guide'].includes(v)&&!v.startsWith('s-')); on?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current'); });
   if(scroll) window.scrollTo(0,y); else window.scrollTo(0,0);
   lastView=v;
 }
 window.addEventListener('hashchange',render);
+const topEl=document.querySelector('header.top'); window.addEventListener('scroll',()=>topEl.classList.toggle('compact',window.scrollY>40),{passive:true});
 render();
 
 /* ---------- この端末の記録 ---------- */
