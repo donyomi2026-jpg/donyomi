@@ -1,0 +1,665 @@
+{
+  "source": "/home/claude/site/data.json",
+  "data_updated": "2026-11-11",
+  "quizzes": [
+    {
+      "no": 1,
+      "pattern": "P1",
+      "pattern_name": "味のヒント3つから、どこの店？",
+      "card_headline": "この丼、どこの店？",
+      "question_post": "【ドンヨミクイズ 第1回】丼を読んで当ててください。口コミでは①スープはド乳化級（5/5）②豚はふわとろ（5/5）③麺は歯応えあり（4/5）という評判。さて、どこの店？答えは明日の夜。\n#ドンヨミクイズ #二郎系",
+      "question_post_chars": 106,
+      "poll_options": [
+        "ラーメン二郎 目黒店",
+        "ラーメン二郎 横浜関内店",
+        "ラーメン二郎 品川店",
+        "ラーメン二郎 越谷店"
+      ],
+      "poll_duration_hours": 24,
+      "correct": {
+        "letter": "B",
+        "label": "ラーメン二郎 横浜関内店",
+        "shop_id": "jiro-kannai",
+        "shop_name": "ラーメン二郎 横浜関内店",
+        "category": "直系",
+        "prefecture": "神奈川県"
+      },
+      "answer_post": "【第1回 答え】正解はB ラーメン二郎 横浜関内店。口コミでは背脂多めの強い乳化スープで甘じょっぱくまろやか、豚はふわとろという評判。コツ：乳化5は4択でここだけ。一発コールは看板の汁なし＋ヤサイニンニクがおすすめ。店ページで詳しく→リンクはリプ欄に\n#ドンヨミクイズ",
+      "answer_post_chars": 134,
+      "reply_link_post": "店ページはこちら → （サイトの ラーメン二郎 横浜関内店 のページURL）",
+      "recommended_call": "汁なし＋ヤサイニンニク",
+      "evidence": {
+        "answer": {
+          "id": "jiro-kannai",
+          "name": "ラーメン二郎 横浜関内店",
+          "category": "直系",
+          "prefecture": "神奈川県",
+          "status": "営業中",
+          "confidence": "high",
+          "taste": {
+            "emulsification": 5,
+            "pork_tenderness": 5,
+            "noodle_firmness": 4,
+            "soup_richness": 3,
+            "pork_size": 3,
+            "volume": 3
+          }
+        },
+        "answer_fields_used": [
+          "taste.emulsification",
+          "taste.pork_tenderness",
+          "taste.noodle_firmness",
+          "taste.soup_richness",
+          "taste.pork_size",
+          "taste.volume",
+          "summary",
+          "popular_calls"
+        ],
+        "options": [
+          {
+            "id": "jiro-meguro",
+            "name": "ラーメン二郎 目黒店",
+            "status": "営業中",
+            "confidence": "high",
+            "taste": {
+              "emulsification": 1,
+              "pork_tenderness": 4,
+              "noodle_firmness": 3
+            }
+          },
+          {
+            "id": "jiro-shinagawa",
+            "name": "ラーメン二郎 品川店",
+            "status": "営業中",
+            "confidence": "mid",
+            "taste": {
+              "emulsification": 1,
+              "pork_tenderness": null,
+              "noodle_firmness": null
+            }
+          },
+          {
+            "id": "jiro-koshigaya",
+            "name": "ラーメン二郎 越谷店",
+            "status": "営業中",
+            "confidence": "mid",
+            "taste": {
+              "emulsification": 1,
+              "pork_tenderness": null,
+              "noodle_firmness": null
+            }
+          }
+        ]
+      },
+      "images": {
+        "question": "q01_question.png",
+        "answer": "q01_answer.png"
+      }
+    },
+    {
+      "no": 2,
+      "pattern": "P2",
+      "pattern_name": "この店の〇〇は？（数値当て）",
+      "card_headline": "仙台店のスープ、乳化度は？",
+      "question_post": "【ドンヨミクイズ 第2回】今回は東北から。ラーメン二郎 仙台店のスープ、口コミでの乳化度は？（1=非乳化〜5=ド乳化）ヒント：麺はやわらかめ、豚は薄めで脂多め、という評判。答えは明日の夜。\n#ドンヨミクイズ #二郎系",
+      "question_post_chars": 108,
+      "poll_options": [
+        "1 キレの非乳化",
+        "2〜3 微乳化〜中間",
+        "4 しっかり乳化",
+        "5 ド乳化"
+      ],
+      "poll_duration_hours": 24,
+      "correct": {
+        "letter": "D",
+        "label": "5 ド乳化",
+        "shop_id": "jiro-sendai",
+        "shop_name": "ラーメン二郎 仙台店",
+        "category": "直系",
+        "prefecture": "宮城県"
+      },
+      "answer_post": "【第2回 答え】正解はD ド乳化（5）。ラーメン二郎 仙台店は、油が多く飲みやすいド乳化スープに柔らかめの麺、という口コミが多い店。コツ：「飲みやすい」は乳化系の評判によく出る言葉。一発コールは玉ねぎ・キムチ系トッピングがおすすめ。店ページで詳しく→リンクはリプ欄に",
+      "answer_post_chars": 133,
+      "reply_link_post": "店ページはこちら → （サイトの ラーメン二郎 仙台店 のページURL）",
+      "recommended_call": "玉ねぎ・キムチ系トッピング",
+      "evidence": {
+        "answer": {
+          "id": "jiro-sendai",
+          "name": "ラーメン二郎 仙台店",
+          "category": "直系",
+          "prefecture": "宮城県",
+          "status": "営業中",
+          "confidence": "mid",
+          "taste": {
+            "noodle_firmness": 2,
+            "pork_size": 2,
+            "soup_richness": 3,
+            "emulsification": 5,
+            "volume": 3
+          }
+        },
+        "answer_fields_used": [
+          "taste.noodle_firmness",
+          "taste.pork_size",
+          "taste.soup_richness",
+          "taste.emulsification",
+          "taste.volume",
+          "summary",
+          "popular_calls"
+        ]
+      },
+      "images": {
+        "question": "q02_question.png",
+        "answer": "q02_answer.png"
+      }
+    },
+    {
+      "no": 3,
+      "pattern": "P3",
+      "pattern_name": "4店の中で一番〇〇なのは？（比較）",
+      "card_headline": "量が一番多いと評判なのは？",
+      "question_post": "【ドンヨミクイズ 第3回】口コミで「量が一番多い」と評判なのはどこ？ヒント：極太麺、極厚の豚、そして「小」でも大盛り級、という声。答えは明日の夜。\n#ドンヨミクイズ #二郎系",
+      "question_post_chars": 87,
+      "poll_options": [
+        "ラーメン二郎 目黒店",
+        "ラーメン二郎 環七新新代田店",
+        "立川マシマシ 立川総本店",
+        "ラーメン二郎 小岩店"
+      ],
+      "poll_duration_hours": 24,
+      "correct": {
+        "letter": "C",
+        "label": "立川マシマシ 立川総本店",
+        "shop_id": "tachikawa-mashimashi",
+        "shop_name": "立川マシマシ 立川総本店",
+        "category": "インスパイア",
+        "prefecture": "東京都"
+      },
+      "answer_post": "【第3回 答え】正解はC 立川マシマシ 立川総本店（量5/5）。口コミでは小でも麺250g・ヤサイ400〜600gとされる大ボリューム。コツ：量5は4択でここだけ。一発コールは初回なら「ヤサイ・アブラ普通」がおすすめ。店ページで詳しく→リンクはリプ欄に\n#ドンヨミクイズ",
+      "answer_post_chars": 135,
+      "reply_link_post": "店ページはこちら → （サイトの 立川マシマシ 立川総本店 のページURL）",
+      "recommended_call": "ヤサイ・アブラ 普通",
+      "evidence": {
+        "answer": {
+          "id": "tachikawa-mashimashi",
+          "name": "立川マシマシ 立川総本店",
+          "category": "インスパイア",
+          "prefecture": "東京都",
+          "status": "営業中",
+          "confidence": "mid",
+          "taste": {
+            "noodle_thickness": 5,
+            "pork_size": 5,
+            "volume": 5,
+            "noodle_firmness": 4,
+            "pork_tenderness": 4,
+            "emulsification": 3
+          }
+        },
+        "answer_fields_used": [
+          "taste.noodle_thickness",
+          "taste.pork_size",
+          "taste.volume",
+          "taste.noodle_firmness",
+          "taste.pork_tenderness",
+          "taste.emulsification",
+          "summary",
+          "popular_calls"
+        ],
+        "options": [
+          {
+            "id": "jiro-meguro",
+            "name": "ラーメン二郎 目黒店",
+            "status": "営業中",
+            "confidence": "high",
+            "taste": {
+              "volume": 2
+            }
+          },
+          {
+            "id": "jiro-shinshindaita",
+            "name": "ラーメン二郎 環七新新代田店",
+            "status": "営業中",
+            "confidence": "mid",
+            "taste": {
+              "volume": 2
+            }
+          },
+          {
+            "id": "jiro-koiwa",
+            "name": "ラーメン二郎 小岩店",
+            "status": "営業中",
+            "confidence": "mid",
+            "taste": {
+              "volume": 3
+            }
+          }
+        ]
+      },
+      "images": {
+        "question": "q03_question.png",
+        "answer": "q03_answer.png"
+      }
+    },
+    {
+      "no": 4,
+      "pattern": "P1",
+      "pattern_name": "味のヒント3つから、どこの店？",
+      "card_headline": "この丼、どこの店？",
+      "question_post": "【ドンヨミクイズ 第4回】ヒント3つでどこの店？口コミでは①とろみのある濃厚スープ（5/5）②乳化寄り（4/5）③量は特盛級（5/5）という評判。インスパイアも混ざってます。答えは明日の夜。\n#ドンヨミクイズ #二郎系",
+      "question_post_chars": 109,
+      "poll_options": [
+        "千里眼",
+        "ラーメン二郎 三田本店",
+        "ラーメン二郎 亀戸店",
+        "ラーメン二郎 千住大橋駅前店"
+      ],
+      "poll_duration_hours": 24,
+      "correct": {
+        "letter": "A",
+        "label": "千里眼",
+        "shop_id": "senrigan",
+        "shop_name": "千里眼",
+        "category": "インスパイア",
+        "prefecture": "東京都"
+      },
+      "answer_post": "【第4回 答え】正解はA 千里眼（駒場・インスパイア）。口コミでは長時間煮込んだ豚骨のとろみある濃厚スープと、標準で麺300gの大盛りが評判。コツ：乳化4×量5は4択でここだけ。一発コールは名物の辛揚げ＋ニンニクがおすすめ。店ページで詳しく→リンクはリプ欄に",
+      "answer_post_chars": 129,
+      "reply_link_post": "店ページはこちら → （サイトの 千里眼 のページURL）",
+      "recommended_call": "辛揚げ＋ニンニク",
+      "evidence": {
+        "answer": {
+          "id": "senrigan",
+          "name": "千里眼",
+          "category": "インスパイア",
+          "prefecture": "東京都",
+          "status": "営業中",
+          "confidence": "mid",
+          "taste": {
+            "soup_richness": 5,
+            "emulsification": 4,
+            "volume": 5,
+            "noodle_thickness": 4,
+            "pork_size": 4,
+            "pork_tenderness": 4
+          }
+        },
+        "answer_fields_used": [
+          "taste.soup_richness",
+          "taste.emulsification",
+          "taste.volume",
+          "taste.noodle_thickness",
+          "taste.pork_size",
+          "taste.pork_tenderness",
+          "summary",
+          "popular_calls"
+        ],
+        "options": [
+          {
+            "id": "jiro-mita",
+            "name": "ラーメン二郎 三田本店",
+            "status": "営業中",
+            "confidence": "mid",
+            "taste": {
+              "soup_richness": 4,
+              "emulsification": 1,
+              "volume": 3
+            }
+          },
+          {
+            "id": "jiro-kameido",
+            "name": "ラーメン二郎 亀戸店",
+            "status": "営業中",
+            "confidence": "mid",
+            "taste": {
+              "soup_richness": 3,
+              "emulsification": 1,
+              "volume": 4
+            }
+          },
+          {
+            "id": "jiro-senjuohashi",
+            "name": "ラーメン二郎 千住大橋駅前店",
+            "status": "営業中",
+            "confidence": "mid",
+            "taste": {
+              "soup_richness": 5,
+              "emulsification": 1,
+              "volume": 3
+            }
+          }
+        ]
+      },
+      "images": {
+        "question": "q04_question.png",
+        "answer": "q04_answer.png"
+      }
+    },
+    {
+      "no": 5,
+      "pattern": "P4",
+      "pattern_name": "名物・看板メニューから、どこの店？",
+      "card_headline": "味噌ラーメンが看板なのは？",
+      "question_post": "【ドンヨミクイズ 第5回】千葉の直系4店から。口コミで「味噌ラーメンが醤油と並ぶ看板」と評判なのは？ヒント：濃いめの味、麺も豚も柔らかめ、少なめの食券あり。答えは明日の夜。\n#ドンヨミクイズ #二郎系",
+      "question_post_chars": 100,
+      "poll_options": [
+        "ラーメン二郎 千葉店",
+        "ラーメン二郎 京成大久保店",
+        "ラーメン二郎 柏店",
+        "ラーメン二郎 松戸駅前店Ⅲ"
+      ],
+      "poll_duration_hours": 24,
+      "correct": {
+        "letter": "B",
+        "label": "ラーメン二郎 京成大久保店",
+        "shop_id": "jiro-keisei-okubo",
+        "shop_name": "ラーメン二郎 京成大久保店",
+        "category": "直系",
+        "prefecture": "千葉県"
+      },
+      "answer_post": "【第5回 答え】正解はB ラーメン二郎 京成大久保店。口コミでは濃いめの味付けで麺・豚ともに柔らかめ、特に味噌ラーメンの評価が高い店。コツ：「少なめの食券」も手がかり。一発コールは味噌ラーメン＋ニンニクがおすすめ。店ページで詳しく→リンクはリプ欄に\n#ドンヨミクイズ",
+      "answer_post_chars": 133,
+      "reply_link_post": "店ページはこちら → （サイトの ラーメン二郎 京成大久保店 のページURL）",
+      "recommended_call": "味噌ラーメン＋ニンニク",
+      "evidence": {
+        "answer": {
+          "id": "jiro-keisei-okubo",
+          "name": "ラーメン二郎 京成大久保店",
+          "category": "直系",
+          "prefecture": "千葉県",
+          "status": "営業中",
+          "confidence": "mid",
+          "taste": {
+            "soup_richness": 4,
+            "noodle_firmness": 2,
+            "pork_tenderness": 4
+          }
+        },
+        "answer_fields_used": [
+          "taste.soup_richness",
+          "taste.noodle_firmness",
+          "taste.pork_tenderness",
+          "summary",
+          "popular_calls"
+        ],
+        "options": [
+          {
+            "id": "jiro-chiba",
+            "name": "ラーメン二郎 千葉店",
+            "status": "営業中",
+            "confidence": "mid",
+            "taste": {
+              "soup_richness": 4,
+              "noodle_firmness": 4,
+              "pork_tenderness": null
+            },
+            "note": "summary / popular_calls に味噌ラーメンの記述なし"
+          },
+          {
+            "id": "jiro-kashiwa",
+            "name": "ラーメン二郎 柏店",
+            "status": "営業中",
+            "confidence": "mid",
+            "taste": {
+              "soup_richness": null,
+              "noodle_firmness": 1,
+              "pork_tenderness": null
+            },
+            "note": "summary / popular_calls に味噌ラーメンの記述なし"
+          },
+          {
+            "id": "jiro-matsudo",
+            "name": "ラーメン二郎 松戸駅前店Ⅲ",
+            "status": "営業中",
+            "confidence": "mid",
+            "taste": {
+              "soup_richness": 4,
+              "noodle_firmness": 2,
+              "pork_tenderness": null
+            },
+            "note": "summary / popular_calls に味噌ラーメンの記述なし"
+          }
+        ]
+      },
+      "images": {
+        "question": "q05_question.png",
+        "answer": "q05_answer.png"
+      }
+    },
+    {
+      "no": 6,
+      "pattern": "P3",
+      "pattern_name": "4店の中で一番〇〇なのは？（比較）",
+      "card_headline": "豚が一番大きいと評判なのは？",
+      "question_post": "【ドンヨミクイズ 第6回】口コミで「豚がいちばん大きい」と評判なのはどこ？ヒント：キリッと非乳化、小麦感の強い太麺、ヤサイはシャキシャキ寄り、という声。答えは明日の夜。\n#ドンヨミクイズ #二郎系",
+      "question_post_chars": 98,
+      "poll_options": [
+        "ラーメン二郎 品川店",
+        "ラーメン二郎 亀戸店",
+        "ラーメン二郎 仙台店",
+        "ラーメン二郎 越谷店"
+      ],
+      "poll_duration_hours": 24,
+      "correct": {
+        "letter": "D",
+        "label": "ラーメン二郎 越谷店",
+        "shop_id": "jiro-koshigaya",
+        "shop_name": "ラーメン二郎 越谷店",
+        "category": "直系",
+        "prefecture": "埼玉県"
+      },
+      "answer_post": "【第6回 答え】正解はD ラーメン二郎 越谷店（豚の大きさ5/5）。口コミでは大きく質量のある豚と、醤油のカエシがキリッと効いた非乳化スープが評判。コツ：豚5は4択でここだけ。一発コールはニンニク・ヤサイがおすすめ。店ページで詳しく→リンクはリプ欄に",
+      "answer_post_chars": 125,
+      "reply_link_post": "店ページはこちら → （サイトの ラーメン二郎 越谷店 のページURL）",
+      "recommended_call": "ニンニク・ヤサイ",
+      "evidence": {
+        "answer": {
+          "id": "jiro-koshigaya",
+          "name": "ラーメン二郎 越谷店",
+          "category": "直系",
+          "prefecture": "埼玉県",
+          "status": "営業中",
+          "confidence": "mid",
+          "taste": {
+            "emulsification": 1,
+            "noodle_thickness": 4,
+            "soup_richness": 4,
+            "pork_size": 5
+          }
+        },
+        "answer_fields_used": [
+          "taste.emulsification",
+          "taste.noodle_thickness",
+          "taste.soup_richness",
+          "taste.pork_size",
+          "summary",
+          "popular_calls"
+        ],
+        "options": [
+          {
+            "id": "jiro-shinagawa",
+            "name": "ラーメン二郎 品川店",
+            "status": "営業中",
+            "confidence": "mid",
+            "taste": {
+              "pork_size": 3
+            }
+          },
+          {
+            "id": "jiro-kameido",
+            "name": "ラーメン二郎 亀戸店",
+            "status": "営業中",
+            "confidence": "mid",
+            "taste": {
+              "pork_size": 4
+            }
+          },
+          {
+            "id": "jiro-sendai",
+            "name": "ラーメン二郎 仙台店",
+            "status": "営業中",
+            "confidence": "mid",
+            "taste": {
+              "pork_size": 2
+            }
+          }
+        ]
+      },
+      "images": {
+        "question": "q06_question.png",
+        "answer": "q06_answer.png"
+      }
+    },
+    {
+      "no": 7,
+      "pattern": "P1",
+      "pattern_name": "味のヒント3つから、どこの店？",
+      "card_headline": "この丼、どこの店？",
+      "question_post": "【ドンヨミクイズ 第7回】ヒント3つでどこの店？口コミでは①極太平打ち麺（5/5）②背脂のきいたクリーミーな乳化寄り（4/5）③ニンニク強め（4/5）という評判。答えは明日の夜。\n#ドンヨミクイズ #二郎系",
+      "question_post_chars": 103,
+      "poll_options": [
+        "ラーメン二郎 三田本店",
+        "ラーメン二郎 上野毛店",
+        "用心棒",
+        "ラーメン二郎 千住大橋駅前店"
+      ],
+      "poll_duration_hours": 24,
+      "correct": {
+        "letter": "C",
+        "label": "用心棒",
+        "shop_id": "yojinbo-jimbocho",
+        "shop_name": "用心棒",
+        "category": "インスパイア",
+        "prefecture": "東京都"
+      },
+      "answer_post": "【第7回 答え】正解はC 用心棒（神保町・インスパイア）。口コミでは極太平打ち麺にマイルドな豚骨醤油、家系寄りとも評される一杯。コツ：極太×乳化寄りは4択でここだけ。一発コールは全マシがおすすめ（ニンニクは強めなのでダブルは慎重に）。店ページで詳しく→リンクはリプ欄に",
+      "answer_post_chars": 134,
+      "reply_link_post": "店ページはこちら → （サイトの 用心棒 のページURL）",
+      "recommended_call": "全マシ",
+      "evidence": {
+        "answer": {
+          "id": "yojinbo-jimbocho",
+          "name": "用心棒",
+          "category": "インスパイア",
+          "prefecture": "東京都",
+          "status": "営業中",
+          "confidence": "mid",
+          "taste": {
+            "noodle_thickness": 5,
+            "emulsification": 4,
+            "garlic_strength": 4,
+            "noodle_firmness": 4,
+            "pork_size": 4,
+            "volume": 4
+          }
+        },
+        "answer_fields_used": [
+          "taste.noodle_thickness",
+          "taste.emulsification",
+          "taste.garlic_strength",
+          "taste.noodle_firmness",
+          "taste.pork_size",
+          "taste.volume",
+          "summary",
+          "popular_calls"
+        ],
+        "options": [
+          {
+            "id": "jiro-mita",
+            "name": "ラーメン二郎 三田本店",
+            "status": "営業中",
+            "confidence": "mid",
+            "taste": {
+              "noodle_thickness": 4,
+              "emulsification": 1,
+              "garlic_strength": null
+            }
+          },
+          {
+            "id": "jiro-kaminoge",
+            "name": "ラーメン二郎 上野毛店",
+            "status": "営業中",
+            "confidence": "mid",
+            "taste": {
+              "noodle_thickness": 3,
+              "emulsification": 1,
+              "garlic_strength": null
+            }
+          },
+          {
+            "id": "jiro-senjuohashi",
+            "name": "ラーメン二郎 千住大橋駅前店",
+            "status": "営業中",
+            "confidence": "mid",
+            "taste": {
+              "noodle_thickness": 4,
+              "emulsification": 1,
+              "garlic_strength": null
+            }
+          }
+        ]
+      },
+      "images": {
+        "question": "q07_question.png",
+        "answer": "q07_answer.png"
+      }
+    },
+    {
+      "no": 8,
+      "pattern": "P2",
+      "pattern_name": "この店の〇〇は？（数値当て）",
+      "card_headline": "西台駅前店の麺、かたさは？",
+      "question_post": "【ドンヨミクイズ 第8回】ラーメン二郎 西台駅前店の麺、口コミでのかたさは？（1=やわらか〜5=かため）ヒント：非乳化でしょっぱめ・旨味の強いスープ、厚みのある豚、という評判。答えは明日の夜。\n#ドンヨミクイズ #二郎系",
+      "question_post_chars": 110,
+      "poll_options": [
+        "1 フワフワやわらか",
+        "2〜3 ふつう寄り",
+        "4 やや硬め",
+        "5 パツパツ硬め"
+      ],
+      "poll_duration_hours": 24,
+      "correct": {
+        "letter": "A",
+        "label": "1 フワフワやわらか",
+        "shop_id": "jiro-nishidai",
+        "shop_name": "ラーメン二郎 西台駅前店",
+        "category": "直系",
+        "prefecture": "東京都"
+      },
+      "answer_post": "【第8回 答え】正解はA フワフワやわらか（1/5）。ラーメン二郎 西台駅前店は柔らかくフワフワした麺が個性で、硬さの指定は受け付けないとされます。コツ：個性の強い麺は口コミに必ず出る。一発コールはニンニクがおすすめ。店ページで詳しく→リンクはリプ欄に",
+      "answer_post_chars": 126,
+      "reply_link_post": "店ページはこちら → （サイトの ラーメン二郎 西台駅前店 のページURL）",
+      "recommended_call": "ニンニク",
+      "evidence": {
+        "answer": {
+          "id": "jiro-nishidai",
+          "name": "ラーメン二郎 西台駅前店",
+          "category": "直系",
+          "prefecture": "東京都",
+          "status": "営業中",
+          "confidence": "mid",
+          "taste": {
+            "emulsification": 1,
+            "soup_richness": 4,
+            "pork_size": 4,
+            "noodle_firmness": 1,
+            "volume": 4
+          }
+        },
+        "answer_fields_used": [
+          "taste.emulsification",
+          "taste.soup_richness",
+          "taste.pork_size",
+          "taste.noodle_firmness",
+          "taste.volume",
+          "summary",
+          "popular_calls"
+        ]
+      },
+      "images": {
+        "question": "q08_question.png",
+        "answer": "q08_answer.png"
+      }
+    }
+  ]
+}
