@@ -1034,6 +1034,8 @@ function quizCall(){
   if(quiz.salt===0 && salty>=4) tips.push('この店はスープが濃いめという評判です。カラメは付けないのがおすすめです。');
   if(quiz.salt===2 && salty>=4) tips.push('この店はもともと濃いめなので、カラメは2回目以降に試すのがおすすめです。');
   if(quiz.garlic===0) tips.push('ニンニクを入れない時は「そのままで」でも通じます。');
+  if(s?.beginner_tip) tips.push('この店では：'+s.beginner_tip);
+  (s?.local_rules||[]).forEach(r=>tips.push('この店の注意：'+r));
   tips.push('初めての店では、まず周りの人の頼み方を少し見てから注文すると安心です。');
   return {c, tips};
 }
@@ -1113,6 +1115,18 @@ function bindHome(root){
 }
 
 /* ---------- 画面：初めてガイド ---------- */
+/* ---------- 初心者向けの店 ---------- */
+function beginnerRank(){
+  const cb={high:1,mid:.5,low:0};
+  return SHOPS.filter(x=>x.status==='営業中'&&x.taste&&x.confidence&&x.taste.volume!=null&&x.taste.soup_richness!=null)
+    .map(x=>{const t=x.taste; const why=[];
+      if(t.volume<=3) why.push(t.volume<=2?'量は控えめという評判':'量は標準的という評判');
+      if(t.soup_richness<=3) why.push('スープは濃すぎないという評判');
+      if(x.confidence==='high') why.push('口コミの情報が多い');
+      if(x.call_timing && !x.call_timing.startsWith('（直系共通')) why.push('注文の流れが確認済み');
+      return {x, why, sc:(5-t.volume)*1.2+(5-t.soup_richness)*.8+cb[x.confidence]+(why.includes('注文の流れが確認済み')?.5:0)};})
+    .sort((a,b)=>b.sc-a.sc).slice(0,6);
+}
 function viewGuide(){
   const steps=[
     ['並ぶ','行列は店の外まで続くことがあります。並び方や食券を買う順番は店ごとに違うので、張り紙と前の人の動きを見ます。'],
@@ -1137,6 +1151,11 @@ function viewGuide(){
       <div class="panel"><h3>麺少なめ・半分</h3><p class="small muted">食べきれるか不安なら、食券を出す時に伝えます。追加料金はかからない店がほとんどです。</p></div>
     </div>
     <p class="xs">量や呼び方は店によって違います。店のページで、わかっている範囲の注文の流れを確認できます。</p>
+  </section>
+  <section class="stack">
+    <h2>初めてに向いていそうな店</h2>
+    <p class="small muted">口コミの傾向（量・スープの濃さ）と情報の多さから計算した目安です。行列の長さや店員さんの対応は反映していません。</p>
+    <div class="grid">${beginnerRank().map((r,i)=>`<a class="panel stack-s" href="#s-${r.x.id}" style="text-decoration:none;color:inherit"><span class="xs">${i+1}位 · ${esc(r.x.prefecture||'')}</span><h3 style="margin:0">${esc(r.x.name)}</h3><div class="row">${chipCat(r.x)}${chipConf(r.x)}</div><ul class="small" style="margin:0;padding-left:1.2em">${r.why.map(w=>`<li>${w}</li>`).join('')}</ul></a>`).join('')}</div>
   </section>
   <section class="stack">
     <h2>コールの言葉</h2>
